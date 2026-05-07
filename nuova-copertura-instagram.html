@@ -67,6 +67,53 @@
   }
   .nav-cta:hover { background: var(--orange-light) !important; color: var(--white) !important; }
 
+  .nav-toggle {
+    display: none;
+    width: 44px; height: 44px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    align-items: center; justify-content: center;
+  }
+  .nav-toggle svg { width: 18px; height: 18px; }
+
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0;
+    background: rgba(13,13,13,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 24px 18px;
+    z-index: 99;
+  }
+  .mobile-nav a {
+    display: block;
+    padding: 12px 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .mobile-nav a:last-child { border-bottom: none; }
+  .mobile-nav a:hover { color: var(--orange); }
+  .mobile-nav a.mobile-cta {
+    margin-top: 10px;
+    background: var(--orange);
+    color: var(--white);
+    border-bottom: none;
+    padding: 12px 14px;
+    border-radius: 2px;
+  }
+  .mobile-nav a.mobile-cta:hover { background: var(--orange-light); color: var(--white); }
+  .mobile-nav.open { display: block; }
+
   /* ── HERO ── */
   #hero {
     position: relative;
@@ -221,8 +268,11 @@
   }
   .servizi-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 2px;
+  }
+  @media (max-width: 1200px) {
+    .servizi-grid { grid-template-columns: repeat(2, 1fr); }
   }
   .service-card {
     position: relative; overflow: hidden;
@@ -444,6 +494,34 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
+
+  .instagram-embeds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .ig-embed {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+  .ig-embed blockquote.instagram-media {
+    margin: 0 !important;
+    width: 100%;
+  }
+  .ig-embed-fallback {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    text-align: center;
+  }
+  .ig-embed-fallback a { color: var(--orange-light); }
   .reel-card {
     position: relative;
     min-height: 230px;
@@ -624,6 +702,7 @@
   @media (max-width: 900px) {
     nav { padding: 18px 24px; }
     .nav-links { display: none; }
+    .nav-toggle { display: inline-flex; }
     section { padding: 70px 24px; }
     .hero-content { padding: 0 24px; }
     .numbers-strip { padding: 24px; grid-template-columns: repeat(2,1fr); gap: 1px; }
@@ -633,6 +712,7 @@
     .about-badge strong { font-size: 36px; }
     .instagram-wrap { grid-template-columns: 1fr; gap: 32px; }
     .instagram-feed { grid-template-columns: 1fr; }
+    .instagram-embeds { grid-template-columns: 1fr; }
     .instagram-stats { grid-template-columns: 1fr; }
     #contatti { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
     .form-row { grid-template-columns: 1fr; }
@@ -652,7 +732,19 @@
     <li><a href="#instagram">Instagram</a></li>
     <li><a href="#contatti" class="nav-cta">Preventivo Gratis</a></li>
   </ul>
+  <button class="nav-toggle" type="button" aria-label="Apri menu" aria-expanded="false" aria-controls="mobileNav">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
 </nav>
+<div id="mobileNav" class="mobile-nav" aria-hidden="true">
+  <a href="#servizi">Servizi</a>
+  <a href="#chi-siamo">Chi siamo</a>
+  <a href="#clienti">Clienti</a>
+  <a href="#instagram">Instagram</a>
+  <a href="#contatti" class="mobile-cta">Preventivo Gratis</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -700,66 +792,44 @@
   </div>
   <div class="servizi-grid">
     <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Rifacimento Tetti">
+      <img src="https://images.unsplash.com/photo-1501331755467-7cbec1d0c055?auto=format&fit=crop&w=1200&q=80" alt="Linea vita">
       <div class="service-overlay">
         <span class="service-num">01</span>
-        <div class="service-name">Rifacimento Tetti</div>
-        <div class="service-desc">Sostituzione completa o parziale della copertura con materiali di prima qualità e garanzia pluriennale.</div>
+        <div class="service-name">Linea vita</div>
+        <div class="service-desc">Progettazione e installazione di sistemi anticaduta certificati per lavorare in quota in sicurezza e in conformità normativa.</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </div>
     <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80" alt="Impermeabilizzazioni">
+      <img src="https://images.unsplash.com/photo-1762438440807-adaaf10faf64?auto=format&fit=crop&w=1200&q=80" alt="Parapetti">
       <div class="service-overlay">
         <span class="service-num">02</span>
-        <div class="service-name">Impermeabilizzazioni</div>
-        <div class="service-desc">Trattamenti professionali per terrazzi, lastrici solari e strutture piane contro infiltrazioni d'acqua.</div>
+        <div class="service-name">Parapetti</div>
+        <div class="service-desc">Fornitura e posa di parapetti e protezioni perimetrali per tetti e terrazzi, temporanei o permanenti.</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </div>
     <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=600&q=80" alt="Fotovoltaico">
+      <img src="https://images.unsplash.com/photo-1542222105-31a21d807f09?auto=format&fit=crop&w=1200&q=80" alt="Scale Marinare">
       <div class="service-overlay">
         <span class="service-num">03</span>
-        <div class="service-name">Impianti Fotovoltaici</div>
-        <div class="service-desc">Installazione integrata di pannelli solari in fase di rifacimento del tetto per massimizzare i risparmi.</div>
+        <div class="service-name">Scale Marinare</div>
+        <div class="service-desc">Installazione di scale fisse di accesso in sicurezza (uscita in copertura, manutenzione impianti, accessi tecnici).</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </div>
     <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Smaltimento Amianto">
+      <img src="https://images.unsplash.com/photo-1760331840361-d751cfc1becf?auto=format&fit=crop&w=1200&q=80" alt="Manutenzione e pulizia">
       <div class="service-overlay">
         <span class="service-num">04</span>
-        <div class="service-name">Smaltimento Amianto</div>
-        <div class="service-desc">Bonifica autorizzata e smaltimento sicuro di coperture in cemento-amianto nel rispetto della normativa.</div>
-        <div class="service-arrow">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </div>
-    <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1445772407829-af8eeaf37f29?w=600&q=80" alt="Coibentazioni">
-      <div class="service-overlay">
-        <span class="service-num">05</span>
-        <div class="service-name">Coibentazioni</div>
-        <div class="service-desc">Isolamento termico e acustico delle coperture per ridurre i consumi energetici e migliorare il comfort.</div>
-        <div class="service-arrow">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </div>
-    <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80" alt="Manutenzione">
-      <div class="service-overlay">
-        <span class="service-num">06</span>
-        <div class="service-name">Manutenzione</div>
-        <div class="service-desc">Ispezioni periodiche, piccole riparazioni e interventi d'emergenza per prolungare la vita della copertura.</div>
+        <div class="service-name">Manutenzione e pulizia</div>
+        <div class="service-desc">Ispezioni periodiche, pulizia gronde e punti critici, piccole riparazioni e interventi rapidi per prevenire infiltrazioni.</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
@@ -875,33 +945,24 @@
         </div>
         <a class="btn-ghost" style="padding:12px 18px" href="https://www.instagram.com/nuovacopertura/reels/" target="_blank" rel="noopener noreferrer">Guarda i Reel</a>
       </div>
-      <div class="instagram-feed">
-        <a class="reel-card" href="https://www.instagram.com/nuovacopertura/reels/" target="_blank" rel="noopener noreferrer" aria-label="Apri i reel Instagram di Nuova Copertura">
-          <span class="reel-chip">Reel 01</span>
-          <span class="reel-play"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-          <h3>Prima / Dopo</h3>
-          <p>Video brevi con trasformazioni visive delle coperture e risultati finali del cantiere.</p>
-        </a>
-        <a class="reel-card" href="https://www.instagram.com/nuovacopertura/reels/" target="_blank" rel="noopener noreferrer" aria-label="Apri i reel Instagram di Nuova Copertura">
-          <span class="reel-chip">Reel 02</span>
-          <span class="reel-play"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-          <h3>Dietro le quinte</h3>
-          <p>Momenti di lavoro in quota, posa materiali e fasi operative raccontate in formato social.</p>
-        </a>
-        <a class="reel-card" href="https://www.instagram.com/nuovacopertura/reels/" target="_blank" rel="noopener noreferrer" aria-label="Apri i reel Instagram di Nuova Copertura">
-          <span class="reel-chip">Reel 03</span>
-          <span class="reel-play"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-          <h3>Dettagli tecnici</h3>
-          <p>Focus su impermeabilizzazioni, rifacimenti e soluzioni costruttive spiegate in modo diretto.</p>
-        </a>
-        <a class="reel-card" href="https://www.instagram.com/nuovacopertura/reels/" target="_blank" rel="noopener noreferrer" aria-label="Apri i reel Instagram di Nuova Copertura">
-          <span class="reel-chip">Reel 04</span>
-          <span class="reel-play"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></span>
-          <h3>Aggiornamenti dal profilo</h3>
-          <p>Un accesso rapido al canale social per vedere i contenuti più recenti pubblicati dal brand.</p>
-        </a>
+      <div class="instagram-embeds" id="igEmbeds">
+        <div class="ig-embed">
+          <!-- Sostituisci questo permalink con un Reel/Post reale per avere l'embed funzionante -->
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/nuovacopertura/" data-instgrm-version="14"></blockquote>
+          <div class="ig-embed-fallback">
+            Embed Instagram non disponibile (permesso/consenso/cookie).
+            <br>
+            Apri su Instagram: <a href="https://www.instagram.com/nuovacopertura/" target="_blank" rel="noopener noreferrer">@nuovacopertura</a>
+          </div>
+        </div>
+        <div class="ig-embed">
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/nuovacopertura/" data-instgrm-version="14"></blockquote>
+          <div class="ig-embed-fallback">
+            Apri su Instagram: <a href="https://www.instagram.com/nuovacopertura/" target="_blank" rel="noopener noreferrer">@nuovacopertura</a>
+          </div>
+        </div>
       </div>
-      <p class="instagram-note">Nota: Instagram non offre un embed semplice e stabile della pagina Reels completa; questa sezione crea un blocco visivo coerente con il sito e rimanda direttamente alla pagina ufficiale dei Reels di Nuova Copertura.</p>
+      <p class="instagram-note">Nota: per un vero “widget” serve embeddare singoli post/reel tramite permalink (Instagram non espone un embed affidabile della pagina Reels). Qui puoi mettere 2–4 permalink reali e l'embed si renderizza automaticamente.</p>
     </div>
   </div>
 </section>
@@ -983,6 +1044,37 @@
 </footer>
 
 <script>
+  // Mobile nav toggle
+  const navToggle = document.querySelector('.nav-toggle');
+  const mobileNav = document.getElementById('mobileNav');
+  if (navToggle && mobileNav) {
+    const setMobileOpen = (open) => {
+      mobileNav.classList.toggle('open', open);
+      mobileNav.setAttribute('aria-hidden', open ? 'false' : 'true');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      navToggle.setAttribute('aria-label', open ? 'Chiudi menu' : 'Apri menu');
+    };
+    navToggle.addEventListener('click', () => {
+      setMobileOpen(!mobileNav.classList.contains('open'));
+    });
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMobileOpen(false)));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMobileOpen(false); });
+  }
+
+  // Instagram embed script (renderizza i blockquote.instagram-media)
+  (function ensureInstagramEmbedScript() {
+    const src = 'https://www.instagram.com/embed.js';
+    if ([...document.scripts].some(s => s.src === src)) return;
+    const s = document.createElement('script');
+    s.async = true;
+    s.defer = true;
+    s.src = src;
+    s.onload = () => {
+      if (window.instgrm?.Embeds?.process) window.instgrm.Embeds.process();
+    };
+    document.body.appendChild(s);
+  })();
+
   // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver(entries => {
@@ -1021,16 +1113,51 @@
   if (strip) numObserver.observe(strip);
 
   // Form submit
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const btn = this.querySelector('.form-submit');
-    btn.textContent = 'Invio in corso…';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
-    }, 1200);
-  });
+  const form = document.getElementById('contactForm');
+  const successEl = document.getElementById('formSuccess');
+  if (form) {
+    const btn = form.querySelector('.form-submit');
+    const originalBtnText = btn ? btn.textContent : '';
+
+    const showSuccess = () => {
+      if (btn) btn.style.display = 'none';
+      if (successEl) successEl.style.display = 'block';
+    };
+
+    const setBusy = (busy) => {
+      if (!btn) return;
+      btn.disabled = busy;
+      btn.textContent = busy ? 'Invio in corso…' : originalBtnText;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setBusy(true);
+
+      const payload = {
+        nome: form.nome?.value?.trim(),
+        cognome: form.cognome?.value?.trim(),
+        email: form.email?.value?.trim(),
+        servizio: form.servizio?.value?.trim(),
+        messaggio: form.messaggio?.value?.trim() || '',
+        source: 'nuova-copertura-instagram.html'
+      };
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error(data?.error || 'Invio fallito');
+        showSuccess();
+      } catch (err) {
+        setBusy(false);
+        alert('Errore durante l’invio. Riprova tra poco oppure contattaci via telefono/email.');
+      }
+    });
+  }
 </script>
 </body>
 </html>

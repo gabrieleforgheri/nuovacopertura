@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuova Copertura — Leader nelle Coperture di Qualità</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #E8500A;
+    --orange-light: #FF6B35;
+    --dark: #0D0D0D;
+    --dark2: #141414;
+    --dark3: #1C1C1C;
+    --gray: #888;
+    --light: #F5F3EF;
+    --white: #fff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(13,13,13,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: padding .3s;
+  }
+  .logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--orange); }
+  .nav-cta {
+    background: var(--orange);
+    color: var(--white) !important;
+    padding: 10px 24px;
+    border-radius: 2px;
+    opacity: 1 !important;
+  }
+  .nav-cta:hover { background: var(--orange-light) !important; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh; min-height: 700px;
+    display: flex; align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(232,80,10,0.15) 100%),
+      url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&q=80') center/cover no-repeat;
+  }
+  /* animated diagonal stripes */
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -55deg,
+      transparent, transparent 80px,
+      rgba(232,80,10,0.04) 80px, rgba(232,80,10,0.04) 81px
+    );
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 60px;
+    max-width: 800px;
+    animation: fadeUp .9s ease both;
+  }
+  .hero-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--orange);
+    border-left: 3px solid var(--orange);
+    padding-left: 12px;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(56px, 8vw, 110px);
+    line-height: 0.95;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+  }
+  .hero-title em { color: var(--orange); font-style: normal; }
+  .hero-sub {
+    font-size: 17px; font-weight: 300; line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    max-width: 480px;
+    margin-bottom: 44px;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--orange);
+    color: var(--white);
+    padding: 15px 36px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: pointer; text-decoration: none;
+    border-radius: 2px;
+    transition: background .2s, transform .2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--orange-light); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    padding: 15px 36px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer; text-decoration: none;
+    border-radius: 2px;
+    transition: border-color .2s, transform .2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+
+  /* scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    animation: bounce 2s infinite;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(232,80,10,0.8), transparent);
+  }
+
+  /* ── NUMBERS STRIP ── */
+  .numbers-strip {
+    background: var(--orange);
+    padding: 32px 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .num-item {
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.25);
+    padding: 12px 0;
+  }
+  .num-item:last-child { border-right: none; }
+  .num-val {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--white);
+  }
+  .num-label {
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 100px 60px; }
+  .section-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(36px, 5vw, 60px);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 16px; font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.7;
+    max-width: 500px;
+  }
+
+  /* ── SERVIZI ── */
+  #servizi { background: var(--dark2); }
+  .servizi-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px; flex-wrap: wrap; gap: 20px;
+  }
+  .servizi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    position: relative; overflow: hidden;
+    height: 360px;
+    cursor: pointer;
+  }
+  .service-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+    filter: brightness(0.6);
+  }
+  .service-card:hover img { transform: scale(1.07); filter: brightness(0.4); }
+  .service-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, transparent 60%);
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 32px;
+    transition: background .3s;
+  }
+  .service-card:hover .service-overlay {
+    background: linear-gradient(to top, rgba(232,80,10,0.85) 0%, rgba(13,13,13,0.4) 100%);
+  }
+  .service-num {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 72px;
+    color: rgba(255,255,255,0.08);
+    position: absolute; top: 16px; right: 24px;
+    line-height: 1;
+    transition: color .3s;
+  }
+  .service-card:hover .service-num { color: rgba(255,255,255,0.15); }
+  .service-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .service-desc {
+    font-size: 13px; font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+    max-height: 0; overflow: hidden;
+    transition: max-height .4s ease;
+  }
+  .service-card:hover .service-desc { max-height: 80px; }
+  .service-arrow {
+    display: inline-block;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 16px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .3s, transform .3s;
+  }
+  .service-card:hover .service-arrow { opacity: 1; transform: translateY(0); }
+
+  /* ── CHI SIAMO ── */
+  #chi-siamo {
+    background: var(--dark);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+  }
+  .about-img-wrap img {
+    width: 100%; height: 560px; object-fit: cover;
+    border-radius: 2px;
+    filter: brightness(0.85) saturate(0.9);
+  }
+  .about-badge {
+    position: absolute;
+    bottom: -24px; right: -24px;
+    width: 140px; height: 140px;
+    background: var(--orange);
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .about-badge strong {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 44px; line-height: 1;
+  }
+  .about-badge span { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+  .about-text .section-sub { max-width: 420px; margin-bottom: 36px; }
+  .about-points { display: flex; flex-direction: column; gap: 16px; }
+  .about-point {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 18px 20px;
+    background: var(--dark3);
+    border-left: 3px solid var(--orange);
+  }
+  .about-point-icon { color: var(--orange); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .about-point-text strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .about-point-text span { font-size: 13px; color: var(--gray); }
+
+  /* ── CLIENTI ── */
+  #clienti { background: var(--dark2); text-align: center; }
+  #clienti .section-title, #clienti .section-tag { text-align: center; }
+  #clienti .section-sub { margin: 0 auto 60px; text-align: center; }
+  .clients-track-wrap { overflow: hidden; position: relative; }
+  .clients-track-wrap::before, .clients-track-wrap::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2;
+    pointer-events: none;
+  }
+  .clients-track-wrap::before { left: 0; background: linear-gradient(to right, var(--dark2), transparent); }
+  .clients-track-wrap::after { right: 0; background: linear-gradient(to left, var(--dark2), transparent); }
+  .clients-track {
+    display: flex; gap: 48px; align-items: center;
+    width: max-content;
+    animation: marquee 20s linear infinite;
+  }
+  .client-logo {
+    width: 110px; height: 60px;
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: border-color .2s, color .2s;
+  }
+  .client-logo:hover { border-color: var(--orange); color: var(--orange); }
+
+  /* ── CONTATTI ── */
+  #contatti {
+    background: var(--dark);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .contact-info .section-sub { margin-bottom: 48px; }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 28px;
+  }
+  .contact-icon {
+    width: 44px; height: 44px;
+    background: rgba(232,80,10,0.15);
+    border: 1px solid rgba(232,80,10,0.3);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--orange); font-size: 17px; flex-shrink: 0;
+  }
+  .contact-detail-text strong { display: block; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); margin-bottom: 4px; }
+  .contact-detail-text span { font-size: 15px; font-weight: 500; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gray);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--white);
+    padding: 14px 16px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color .2s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--orange); }
+  .form-group select option { background: var(--dark3); }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+  .form-submit {
+    background: var(--orange);
+    color: var(--white);
+    border: none; cursor: pointer;
+    padding: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase;
+    border-radius: 2px;
+    transition: background .2s, transform .2s;
+    margin-top: 4px;
+  }
+  .form-submit:hover { background: var(--orange-light); transform: translateY(-2px); }
+  .form-success {
+    display: none;
+    background: rgba(232,80,10,0.1);
+    border: 1px solid var(--orange);
+    padding: 16px 20px;
+    border-radius: 2px;
+    font-size: 14px;
+    color: var(--orange-light);
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark2);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 60px;
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  }
+  footer .logo { font-size: 20px; }
+  .footer-copy { font-size: 12px; color: var(--gray); }
+  .social-link {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gray); text-decoration: none;
+    transition: border-color .2s, color .2s;
+  }
+  .social-link:hover { border-color: var(--orange); color: var(--orange); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes countUp { from { opacity: 0; } to { opacity: 1; } }
+
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 18px 24px; }
+    .nav-links { display: none; }
+    section { padding: 70px 24px; }
+    .hero-content { padding: 0 24px; }
+    .numbers-strip { padding: 24px; grid-template-columns: repeat(2,1fr); gap: 1px; }
+    .servizi-grid { grid-template-columns: 1fr; }
+    #chi-siamo { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
+    .about-badge { bottom: -16px; right: 0; width: 110px; height: 110px; }
+    .about-badge strong { font-size: 36px; }
+    #contatti { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 24px; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">NUOVA <span>COPERTURA</span></a>
+  <ul class="nav-links">
+    <li><a href="#servizi">Servizi</a></li>
+    <li><a href="#chi-siamo">Chi siamo</a></li>
+    <li><a href="#clienti">Clienti</a></li>
+    <li><a href="#contatti" class="nav-cta">Preventivo Gratis</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Esperti in coperture dal 2005</div>
+    <h1 class="hero-title">LEADER NELLE<br><em>COPERTURE</em><br>DI QUALITÀ</h1>
+    <p class="hero-sub">Rifacimento tetti, impermeabilizzazioni, smaltimento amianto e installazione fotovoltaico. Professionalità e garanzia su ogni intervento.</p>
+    <div class="hero-btns">
+      <a href="#contatti" class="btn-primary">Richiedi Preventivo</a>
+      <a href="#servizi" class="btn-ghost">Scopri i Servizi</a>
+    </div>
+  </div>
+  <div class="scroll-hint">Scorri</div>
+</section>
+
+<!-- NUMBERS -->
+<div class="numbers-strip">
+  <div class="num-item reveal">
+    <div class="num-val" data-target="850">0</div>
+    <div class="num-label">Coperture Rifatte</div>
+  </div>
+  <div class="num-item reveal">
+    <div class="num-val" data-target="42000">0</div>
+    <div class="num-label">m² di Coperture</div>
+  </div>
+  <div class="num-item reveal">
+    <div class="num-val" data-target="320">0</div>
+    <div class="num-label">Pannelli Fotovoltaici</div>
+  </div>
+  <div class="num-item reveal">
+    <div class="num-val" data-target="180">0</div>
+    <div class="num-label">Ton. Amianto Smaltite</div>
+  </div>
+</div>
+
+<!-- SERVIZI -->
+<section id="servizi">
+  <div class="servizi-header">
+    <div>
+      <div class="section-tag">I nostri servizi</div>
+      <h2 class="section-title">COSA FACCIAMO</h2>
+    </div>
+    <p class="section-sub">Interveniamo su ogni tipologia di copertura, con materiali certificati e squadre specializzate.</p>
+  </div>
+  <div class="servizi-grid">
+    <div class="service-card reveal">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Rifacimento Tetti">
+      <div class="service-overlay">
+        <span class="service-num">01</span>
+        <div class="service-name">Rifacimento Tetti</div>
+        <div class="service-desc">Sostituzione completa o parziale della copertura con materiali di prima qualità e garanzia pluriennale.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&q=80" alt="Impermeabilizzazioni">
+      <div class="service-overlay">
+        <span class="service-num">02</span>
+        <div class="service-name">Impermeabilizzazioni</div>
+        <div class="service-desc">Trattamenti professionali per terrazzi, lastrici solari e strutture piane contro infiltrazioni d'acqua.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <img src="https://images.unsplash.com/photo-1497440001374-f26997328c1b?w=600&q=80" alt="Fotovoltaico">
+      <div class="service-overlay">
+        <span class="service-num">03</span>
+        <div class="service-name">Impianti Fotovoltaici</div>
+        <div class="service-desc">Installazione integrata di pannelli solari in fase di rifacimento del tetto per massimizzare i risparmi.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Smaltimento Amianto">
+      <div class="service-overlay">
+        <span class="service-num">04</span>
+        <div class="service-name">Smaltimento Amianto</div>
+        <div class="service-desc">Bonifica autorizzata e smaltimento sicuro di coperture in cemento-amianto nel rispetto della normativa.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <img src="https://images.unsplash.com/photo-1445772407829-af8eeaf37f29?w=600&q=80" alt="Coibentazioni">
+      <div class="service-overlay">
+        <span class="service-num">05</span>
+        <div class="service-name">Coibentazioni</div>
+        <div class="service-desc">Isolamento termico e acustico delle coperture per ridurre i consumi energetici e migliorare il comfort.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="service-card reveal">
+      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80" alt="Manutenzione">
+      <div class="service-overlay">
+        <span class="service-num">06</span>
+        <div class="service-name">Manutenzione</div>
+        <div class="service-desc">Ispezioni periodiche, piccole riparazioni e interventi d'emergenza per prolungare la vita della copertura.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHI SIAMO -->
+<section id="chi-siamo">
+  <div class="about-img-wrap reveal">
+    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=700&q=80" alt="Squadra Nuova Copertura">
+    <div class="about-badge">
+      <strong>20+</strong>
+      <span>Anni di<br>Esperienza</span>
+    </div>
+  </div>
+  <div class="about-text reveal">
+    <div class="section-tag">Chi siamo</div>
+    <h2 class="section-title">RIGUARDO NOI</h2>
+    <p class="section-sub">Siamo un'azienda specializzata nel rifacimento e nella manutenzione di coperture, con sede a Modena e operatività su tutto il Nord Italia. Qualità, affidabilità e rispetto dei tempi sono i valori che ci guidano ogni giorno.</p>
+    <div class="about-points">
+      <div class="about-point">
+        <div class="about-point-icon">✦</div>
+        <div class="about-point-text">
+          <strong>Personale Certificato</strong>
+          <span>Squadre specializzate con aggiornamento continuo e DPI di ultima generazione.</span>
+        </div>
+      </div>
+      <div class="about-point">
+        <div class="about-point-icon">✦</div>
+        <div class="about-point-text">
+          <strong>Materiali Garantiti</strong>
+          <span>Lavoriamo solo con materiali di prima scelta e fornitori certificati CE.</span>
+        </div>
+      </div>
+      <div class="about-point">
+        <div class="about-point-icon">✦</div>
+        <div class="about-point-text">
+          <strong>Preventivi Trasparenti</strong>
+          <span>Sopralluogo gratuito e preventivo dettagliato senza costi nascosti.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTI -->
+<section id="clienti">
+  <div class="section-tag">I nostri clienti</div>
+  <h2 class="section-title">CI HANNO SCELTO</h2>
+  <p class="section-sub">Aziende, privati e amministrazioni pubbliche ci affidano le loro coperture da vent'anni.</p>
+  <div class="clients-track-wrap">
+    <div class="clients-track">
+      <div class="client-logo">Edilpro</div>
+      <div class="client-logo">Gruppo BM</div>
+      <div class="client-logo">Condomini MO</div>
+      <div class="client-logo">Tecno Build</div>
+      <div class="client-logo">Studio Arch.</div>
+      <div class="client-logo">ImpresaRE</div>
+      <div class="client-logo">Cerafer</div>
+      <div class="client-logo">Edilgiesse</div>
+      <div class="client-logo">Alfa Imm.</div>
+      <!-- duplicate for seamless loop -->
+      <div class="client-logo">Edilpro</div>
+      <div class="client-logo">Gruppo BM</div>
+      <div class="client-logo">Condomini MO</div>
+      <div class="client-logo">Tecno Build</div>
+      <div class="client-logo">Studio Arch.</div>
+      <div class="client-logo">ImpresaRE</div>
+      <div class="client-logo">Cerafer</div>
+      <div class="client-logo">Edilgiesse</div>
+      <div class="client-logo">Alfa Imm.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATTI -->
+<section id="contatti">
+  <div class="contact-info reveal">
+    <div class="section-tag">Contatti</div>
+    <h2 class="section-title">RICHIEDI IL TUO<br>PREVENTIVO GRATIS</h2>
+    <p class="section-sub">Compila il modulo o contattaci direttamente. Rispondiamo entro 24 ore.</p>
+    <div class="contact-detail">
+      <div class="contact-icon">📍</div>
+      <div class="contact-detail-text">
+        <strong>Sede</strong>
+        <span>Via Adolfo Venturi, 36 — 41124 Modena MO</span>
+      </div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">📞</div>
+      <div class="contact-detail-text">
+        <strong>Telefono</strong>
+        <span>+39 388 784 1511</span>
+      </div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-detail-text">
+        <strong>Email</strong>
+        <span>info@nuovacopertura.it</span>
+      </div>
+    </div>
+  </div>
+  <div class="reveal">
+    <form class="contact-form" id="contactForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" placeholder="Mario" required>
+        </div>
+        <div class="form-group">
+          <label>Cognome</label>
+          <input type="text" placeholder="Rossi" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="mario.rossi@email.it" required>
+      </div>
+      <div class="form-group">
+        <label>Servizio richiesto</label>
+        <select required>
+          <option value="">Seleziona un servizio…</option>
+          <option>Rifacimento Tetto</option>
+          <option>Impermeabilizzazione</option>
+          <option>Impianto Fotovoltaico</option>
+          <option>Smaltimento Amianto</option>
+          <option>Coibentazione</option>
+          <option>Manutenzione</option>
+          <option>Altro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Messaggio (opzionale)</label>
+        <textarea placeholder="Descrivi brevemente il tuo progetto…"></textarea>
+      </div>
+      <button type="submit" class="form-submit">Invia Richiesta →</button>
+      <div class="form-success" id="formSuccess">✔ Richiesta inviata! Ti contatteremo presto.</div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">NUOVA <span>COPERTURA</span></a>
+  <p class="footer-copy">© 2024 Nuova Copertura Srl — Tutti i diritti riservati — P.IVA 03XXXXXXXX</p>
+  <a href="https://www.instagram.com/nuovacopertura" class="social-link" aria-label="Instagram">
+    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+  </a>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Count-up numbers
+  function countUp(el, target, duration = 1800) {
+    const isLarge = target > 999;
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { start = target; clearInterval(timer); }
+      el.textContent = isLarge
+        ? Math.floor(start).toLocaleString('it-IT')
+        : Math.floor(start);
+    }, 16);
+  }
+  const numObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const nums = e.target.querySelectorAll('[data-target]');
+        nums.forEach(n => countUp(n, parseInt(n.dataset.target)));
+        numObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  const strip = document.querySelector('.numbers-strip');
+  if (strip) numObserver.observe(strip);
+
+  // Form submit
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('.form-submit');
+    btn.textContent = 'Invio in corso…';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    }, 1200);
+  });
+</script>
+</body>
+</html>

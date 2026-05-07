@@ -938,21 +938,21 @@
     <form class="contact-form" id="contactForm">
       <div class="form-row">
         <div class="form-group">
-          <label>Nome</label>
-          <input type="text" placeholder="Mario" required>
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" placeholder="Mario" required>
         </div>
         <div class="form-group">
-          <label>Cognome</label>
-          <input type="text" placeholder="Rossi" required>
+          <label for="cognome">Cognome</label>
+          <input type="text" id="cognome" name="cognome" placeholder="Rossi" required>
         </div>
       </div>
       <div class="form-group">
-        <label>Email</label>
-        <input type="email" placeholder="mario.rossi@email.it" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="mario.rossi@email.it" required>
       </div>
       <div class="form-group">
-        <label>Servizio richiesto</label>
-        <select required>
+        <label for="servizio">Servizio richiesto</label>
+        <select id="servizio" name="servizio" required>
           <option value="">Seleziona un servizio…</option>
           <option>Rifacimento Tetto</option>
           <option>Impermeabilizzazione</option>
@@ -964,8 +964,8 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Messaggio (opzionale)</label>
-        <textarea placeholder="Descrivi brevemente il tuo progetto…"></textarea>
+        <label for="messaggio">Messaggio (opzionale)</label>
+        <textarea id="messaggio" name="messaggio" placeholder="Descrivi brevemente il tuo progetto…"></textarea>
       </div>
       <button type="submit" class="form-submit">Invia Richiesta →</button>
       <div class="form-success" id="formSuccess">✔ Richiesta inviata! Ti contatteremo presto.</div>

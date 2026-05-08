@@ -15,6 +15,16 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMobileOpen(false); });
   }
 
+  // Shrink navbar on scroll
+  const nav = document.querySelector('nav');
+  if (nav) {
+    const updateNavOnScroll = () => {
+      nav.classList.toggle('nav-scrolled', window.scrollY > 8);
+    };
+    updateNavOnScroll();
+    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+  }
+
   // Theme toggle (default light)
   const themeButtons = [
     document.getElementById('themeToggle'),
@@ -67,6 +77,7 @@
   const cookieOnlyNecessary = document.getElementById('cookieOnlyNecessary');
   const cookieRejectOptional = document.getElementById('cookieRejectOptional');
   const cookieSettingsBtn = document.getElementById('cookieSettingsBtn');
+  const igEmbeds = document.getElementById('igEmbeds');
 
   const showCookieBanner = () => {
     if (cookieBanner) cookieBanner.classList.add('is-visible');
@@ -77,6 +88,9 @@
   };
 
   const applyConsent = (choice) => {
+    if (igEmbeds) {
+      igEmbeds.classList.toggle('consent-accepted', choice === 'accepted');
+    }
     if (choice === 'accepted') {
       ensureInstagramEmbedScript();
     }
@@ -101,6 +115,7 @@
     cookieRejectOptional.addEventListener('click', () => {
       localStorage.setItem(cookieConsentKey, 'rejected');
       hideCookieBanner();
+      applyConsent('rejected');
     });
   }
 
@@ -108,6 +123,7 @@
     cookieOnlyNecessary.addEventListener('click', () => {
       localStorage.setItem(cookieConsentKey, 'necessary-only');
       hideCookieBanner();
+      applyConsent('necessary-only');
     });
   }
 
@@ -115,6 +131,41 @@
     cookieSettingsBtn.addEventListener('click', () => {
       showCookieBanner();
     });
+  }
+
+  // Hero rotating slot text
+  const heroSlot = document.getElementById('heroSlot');
+  const heroPrep = document.getElementById('heroPrep');
+  if (heroSlot) {
+    const currentEl = heroSlot.querySelector('.slot-current');
+    const nextEl = heroSlot.querySelector('.slot-next');
+    const items = [
+      { prep: 'NELLE', text: 'COPERTURE' },
+      { prep: 'NELLE', text: 'LINEE VITA' },
+      { prep: 'NEI', text: 'PARAPETTI' },
+      { prep: 'NELLE', text: 'SCALE MARINARE' },
+      { prep: 'NEI', text: 'MONTAGGI FOTOVOLTAICI' },
+      { prep: 'NELLE', text: 'MANUTENZIONI' },
+      { prep: 'NEGLI', text: 'SMALTIMENTI' }
+    ];
+
+    let idx = 0;
+    const rotate = () => {
+      if (!currentEl || !nextEl || heroSlot.classList.contains('is-spinning')) return;
+      idx = (idx + 1) % items.length;
+      nextEl.textContent = items[idx].text;
+      if (heroPrep) heroPrep.textContent = items[idx].prep;
+      heroSlot.classList.add('is-spinning');
+      window.setTimeout(() => {
+        currentEl.textContent = items[idx].text;
+        nextEl.textContent = '';
+        heroSlot.classList.remove('is-spinning');
+      }, 480);
+    };
+
+    currentEl.textContent = items[0].text;
+    if (heroPrep) heroPrep.textContent = items[0].prep;
+    window.setInterval(rotate, 2600);
   }
 
   // Scroll reveal

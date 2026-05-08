@@ -27,9 +27,11 @@
     document.body.setAttribute('data-theme', safeTheme);
     themeButtons.forEach((btn) => {
       const isDark = safeTheme === 'dark';
-      btn.textContent = isDark ? 'Tema chiaro' : 'Tema scuro';
+      btn.innerHTML = `<span class="theme-icon" aria-hidden="true">${isDark ? '☀️' : '🌙'}</span>`;
       btn.setAttribute('aria-pressed', String(isDark));
-      btn.setAttribute('aria-label', isDark ? 'Attiva tema chiaro' : 'Attiva tema scuro');
+      const nextLabel = isDark ? 'Attiva tema chiaro' : 'Attiva tema scuro';
+      btn.setAttribute('aria-label', nextLabel);
+      btn.setAttribute('title', nextLabel);
     });
   };
 

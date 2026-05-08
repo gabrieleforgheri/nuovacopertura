@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 import path from 'path';
 import dns from 'node:dns';
 import { fileURLToPath } from 'url';
+import { isValidEmail, requiredString } from './utils.js';
 
 dotenv.config();
 
@@ -33,21 +34,6 @@ app.use(express.static(__dirname, { extensions: ['html'] }));
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'nuova-copertura-instagram.html'));
 });
-
-function isValidEmail(email) {
-  if (typeof email !== 'string') return false;
-  const e = email.trim();
-  if (e.length < 6 || e.length > 254) return false;
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-}
-
-function requiredString(value, maxLen) {
-  if (typeof value !== 'string') return null;
-  const v = value.trim();
-  if (!v) return null;
-  if (maxLen && v.length > maxLen) return null;
-  return v;
-}
 
 // Resolve SMTP host via the OS resolver (dns.lookup) once and pass the IP to
 // nodemailer. Nodemailer otherwise uses dns.resolve4/6 (c-ares) which can fail

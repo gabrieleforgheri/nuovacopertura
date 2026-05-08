@@ -1,25 +1,41 @@
   // Mobile nav toggle
   const navToggle = document.querySelector('.nav-toggle');
   const mobileNav = document.getElementById('mobileNav');
+  const nav = document.querySelector('nav');
   if (navToggle && mobileNav) {
+    const syncMobileNavOffset = () => {
+      if (!nav) return;
+      const navHeight = Math.max(72, Math.min(110, Math.ceil(nav.getBoundingClientRect().height)));
+      document.documentElement.style.setProperty('--mobile-nav-top', `${navHeight}px`);
+    };
+
     const setMobileOpen = (open) => {
       mobileNav.classList.toggle('open', open);
       mobileNav.setAttribute('aria-hidden', open ? 'false' : 'true');
       navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       navToggle.setAttribute('aria-label', open ? 'Chiudi menu' : 'Apri menu');
+      document.body.style.overflow = open ? 'hidden' : '';
+      syncMobileNavOffset();
     };
+
+    syncMobileNavOffset();
     navToggle.addEventListener('click', () => {
       setMobileOpen(!mobileNav.classList.contains('open'));
     });
     mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMobileOpen(false)));
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMobileOpen(false); });
+    window.addEventListener('resize', () => {
+      syncMobileNavOffset();
+      if (window.innerWidth > 900) setMobileOpen(false);
+    });
   }
 
   // Shrink navbar on scroll
-  const nav = document.querySelector('nav');
   if (nav) {
     const updateNavOnScroll = () => {
       nav.classList.toggle('nav-scrolled', window.scrollY > 8);
+      const navHeight = Math.max(72, Math.min(110, Math.ceil(nav.getBoundingClientRect().height)));
+      document.documentElement.style.setProperty('--mobile-nav-top', `${navHeight}px`);
     };
     updateNavOnScroll();
     window.addEventListener('scroll', updateNavOnScroll, { passive: true });

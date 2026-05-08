@@ -4,8 +4,6 @@ import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { lookup } from 'node:dns/promises';
-import { logger } from './logger.js';
 
 dotenv.config();
 
@@ -48,11 +46,6 @@ function requiredString(value, maxLen) {
   return v;
 }
 
-async function resolveSmtpHostIp(host) {
-  const { address } = await lookup(host, { family: 4 });
-  return address;
-}
-
 async function getTransporter() {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -67,19 +60,11 @@ async function getTransporter() {
       ? secureEnv.toLowerCase() === 'true'
       : port === 465;
 
-  let connectHost = host;
-  try {
-    connectHost = await resolveSmtpHostIp(host);
-  } catch (e) {
-    logger.warn('[smtp] dns.lookup failed, falling back to host name:', e?.message || e);
-  }
-
   return nodemailer.createTransport({
-    host: connectHost,
+    host: host,
     port,
     secure,
     auth: { user, pass },
-    tls: { servername: host },
     connectionTimeout: 15_000,
     greetingTimeout: 15_000,
     socketTimeout: 20_000
@@ -121,14 +106,14 @@ app.post('/api/contact', rateLimit, async (req, res) => {
 
   const to = process.env.CONTACT_TO || '';
   if (!to) {
-    logger.error('[contact] Error: CONTACT_TO not configured in environment.');
+    console.error('[contact] Error: CONTACT_TO not configured in environment.');
     return res.status(500).json({ ok: false, error: 'Server misconfigured: destination email not set.' });
   }
 
   const transporter = await getTransporter();
 
   if (!transporter) {
-    logger.error('[contact] Error: SMTP is not configured. Missing SMTP_HOST, SMTP_USER, or SMTP_PASS.');
+    console.error('[contact] Error: SMTP is not configured. Missing SMTP_HOST, SMTP_USER, or SMTP_PASS.');
     return res.status(500).json({ ok: false, error: 'Server misconfigured: SMTP not configured.' });
   }
 
@@ -155,16 +140,19 @@ app.post('/api/contact', rateLimit, async (req, res) => {
       subject,
       text
     });
-    logger.log('[contact] email sent', info?.messageId || '');
+    // eslint-disable-next-line no-console
+    console.log('[contact] email sent', info?.messageId || '');
     return res.json({ ok: true });
   } catch (e) {
-    logger.error('[contact] email delivery failed with error:', e);
+    // eslint-disable-next-line no-console
+    console.error('[contact] email delivery failed with error:', e);
     return res.status(502).json({ ok: false, error: 'Email delivery failed' });
   }
 });
 
 const port = Number(process.env.PORT || '3000');
 app.listen(port, () => {
-  logger.log(`Server running on http://localhost:${port}`);
+  // eslint-disable-next-line no-console
+  console.log(`Server running on http://localhost:${port}`);
 });
 

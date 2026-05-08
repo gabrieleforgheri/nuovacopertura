@@ -12,11 +12,11 @@ RUN npm ci --only=production
 # ---- Release ----
 FROM base AS release
 
-# Copy production dependencies
-COPY --from=dependencies /app/node_modules ./node_modules
-
 # Copy application source
 COPY . .
+
+# Copy production dependencies
+COPY --from=dependencies /app/node_modules ./node_modules
 
 # Ensure we're running as a non-root user
 USER node

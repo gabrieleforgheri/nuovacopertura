@@ -1,8 +1,8 @@
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --orange: #E8500A;
-    --orange-light: #FF6B35;
+    --orange: #009246;
+    --orange-light: #CE2B37;
     --dark: #ffffff;
     --dark2: #f5f7fb;
     --dark3: #ebeff5;
@@ -107,7 +107,7 @@
     display: none;
     width: 44px; height: 44px;
     border-radius: 2px;
-    background: rgba(232,80,10,0.08);
+    background: rgba(0,146,70,0.08);
     border: 1px solid var(--panel-border);
     color: var(--white);
     cursor: pointer;
@@ -160,12 +160,12 @@
   .hero-bg {
     position: absolute; inset: 0;
     background:
-      linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(232,80,10,0.15) 100%),
+      linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(0,146,70,0.18) 100%),
       url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&q=80') center/cover no-repeat;
   }
   body[data-theme='light'] .hero-bg {
     background:
-      linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 60%, rgba(232,80,10,0.14) 100%),
+      linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 52%, rgba(0,146,70,0.14) 76%, rgba(206,43,55,0.14) 100%),
       url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1800&q=80') center/cover no-repeat;
   }
   /* animated diagonal stripes */
@@ -175,7 +175,7 @@
     background: repeating-linear-gradient(
       -55deg,
       transparent, transparent 80px,
-      rgba(232,80,10,0.04) 80px, rgba(232,80,10,0.04) 81px
+      rgba(206,43,55,0.05) 80px, rgba(206,43,55,0.05) 81px
     );
   }
   .hero-content {
@@ -248,7 +248,7 @@
   .scroll-hint::after {
     content: '';
     width: 1px; height: 50px;
-    background: linear-gradient(to bottom, rgba(232,80,10,0.8), transparent);
+    background: linear-gradient(to bottom, rgba(0,146,70,0.8), transparent);
   }
 
   /* ── NUMBERS STRIP ── */
@@ -335,7 +335,7 @@
     transition: background .3s;
   }
   .service-card:hover .service-overlay {
-    background: linear-gradient(to top, rgba(232,80,10,0.85) 0%, rgba(13,13,13,0.4) 100%);
+    background: linear-gradient(to top, rgba(206,43,55,0.84) 0%, rgba(13,13,13,0.45) 100%);
   }
   .service-num {
     font-family: 'Bebas Neue', cursive;
@@ -487,7 +487,7 @@
     color: rgba(255,255,255,0.55);
   }
   .instagram-panel {
-    background: linear-gradient(180deg, rgba(232,80,10,0.08), rgba(255,255,255,0.02));
+    background: linear-gradient(180deg, rgba(0,146,70,0.08), rgba(255,255,255,0.02));
     border: 1px solid rgba(255,255,255,0.08);
     padding: 22px;
     border-radius: 2px;
@@ -571,7 +571,7 @@
     border: 1px solid rgba(255,255,255,0.08);
     background:
       linear-gradient(180deg, rgba(13,13,13,0.12), rgba(13,13,13,0.92)),
-      radial-gradient(circle at top left, rgba(232,80,10,0.35), transparent 55%),
+      radial-gradient(circle at top left, rgba(0,146,70,0.35), transparent 55%),
       #151515;
     padding: 18px;
     display: flex;
@@ -579,7 +579,7 @@
     justify-content: flex-end;
     transition: transform .25s ease, border-color .25s ease;
   }
-  .reel-card:hover { transform: translateY(-4px); border-color: rgba(232,80,10,0.45); }
+  .reel-card:hover { transform: translateY(-4px); border-color: rgba(206,43,55,0.45); }
   .reel-chip {
     position: absolute;
     top: 14px; left: 14px;
@@ -688,8 +688,8 @@
   }
   .contact-icon {
     width: 44px; height: 44px;
-    background: rgba(232,80,10,0.15);
-    border: 1px solid rgba(232,80,10,0.3);
+    background: rgba(0,146,70,0.15);
+    border: 1px solid rgba(0,146,70,0.34);
     border-radius: 2px;
     display: flex; align-items: center; justify-content: center;
     color: var(--orange); font-size: 17px; flex-shrink: 0;
@@ -739,12 +739,12 @@
   .form-submit:hover { background: var(--orange-light); transform: translateY(-2px); }
   .form-success {
     display: none;
-    background: rgba(232,80,10,0.1);
+    background: rgba(0,146,70,0.1);
     border: 1px solid var(--orange);
     padding: 16px 20px;
     border-radius: 2px;
     font-size: 14px;
-    color: var(--orange-light);
+    color: var(--orange);
     text-align: center;
   }
 

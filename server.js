@@ -17,11 +17,20 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '256kb' }));
 
+// Security Headers
+app.use((req, res, next) => {
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
 // Serve static files (HTML in root)
 app.use(express.static(__dirname, { extensions: ['html'] }));
 
 app.get('/', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'nuova-copertura-instagram.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 function isValidEmail(email) {

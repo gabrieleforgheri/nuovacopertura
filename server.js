@@ -46,7 +46,11 @@ function requiredString(value, maxLen) {
   return v;
 }
 
+let cachedTransporter = null;
+
 async function getTransporter() {
+  if (cachedTransporter) return cachedTransporter;
+
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
@@ -60,7 +64,7 @@ async function getTransporter() {
       ? secureEnv.toLowerCase() === 'true'
       : port === 465;
 
-  return nodemailer.createTransport({
+  cachedTransporter = nodemailer.createTransport({
     host: host,
     port,
     secure,
@@ -69,6 +73,7 @@ async function getTransporter() {
     greetingTimeout: 15_000,
     socketTimeout: 20_000
   });
+  return cachedTransporter;
 }
 
 // very small in-memory rate limit (per-IP)

@@ -3,21 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import path from 'path';
-import dns from 'node:dns';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
-
-// Nodemailer uses dns.resolve4/6 (c-ares) before falling back to dns.lookup.
-// If the system's configured DNS server is unreachable (e.g. 127.0.0.1 with no
-// local resolver), resolve4/6 hang for 30s+ and SMTP times out with
-// "queryA ETIMEOUT". Override Node's resolver list with public DNS servers
-// (configurable via DNS_SERVERS, comma separated) to avoid that.
-const dnsServers = (process.env.DNS_SERVERS || '1.1.1.1,8.8.8.8')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean);
-if (dnsServers.length) dns.setServers(dnsServers);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,19 +37,6 @@ function requiredString(value, maxLen) {
   return v;
 }
 
-// Resolve SMTP host via the OS resolver (dns.lookup) once and pass the IP to
-// nodemailer. Nodemailer otherwise uses dns.resolve4/6 (c-ares) which can fail
-// on machines where outbound DNS is filtered (VPN, corporate firewall) even
-// though the system resolver still works fine.
-let smtpHostIpCache = null;
-async function resolveSmtpHostIp(host) {
-  if (smtpHostIpCache && smtpHostIpCache.host === host) return smtpHostIpCache.ip;
-  const { lookup } = await import('node:dns/promises');
-  const { address } = await lookup(host, { family: 4 });
-  smtpHostIpCache = { host, ip: address };
-  return address;
-}
-
 async function getTransporter() {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -76,20 +51,11 @@ async function getTransporter() {
       ? secureEnv.toLowerCase() === 'true'
       : port === 465;
 
-  let connectHost = host;
-  try {
-    connectHost = await resolveSmtpHostIp(host);
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('[smtp] dns.lookup failed, falling back to host name:', e?.message || e);
-  }
-
   return nodemailer.createTransport({
-    host: connectHost,
+    host: host,
     port,
     secure,
     auth: { user, pass },
-    tls: { servername: host },
     connectionTimeout: 15_000,
     greetingTimeout: 15_000,
     socketTimeout: 20_000
@@ -131,53 +97,48 @@ app.post('/api/contact', rateLimit, async (req, res) => {
 
   const to = process.env.CONTACT_TO || '';
   if (!to) {
-    // In development allow testing without configuration.
-    // We still validate input and return ok to avoid blocking the frontend.
-    // eslint-disable-next-line no-console
-    console.warn('[contact] CONTACT_TO not configured; skipping delivery');
-    return res.json({ ok: true, warning: 'CONTACT_TO not configured; skipped delivery' });
+    console.error('[contact] Error: CONTACT_TO not configured in environment.');
+    return res.status(500).json({ ok: false, error: 'Server misconfigured: destination email not set.' });
   }
 
   const transporter = await getTransporter();
 
-  // If SMTP is configured, send an email; otherwise accept and log.
-  if (transporter) {
-    const from = process.env.SMTP_FROM || `Nuova Copertura <${process.env.SMTP_USER}>`;
-    const subject = `Nuova Copertura - Richiesta preventivo (${servizio})`;
-    const text = [
-      `Nome: ${nome}`,
-      `Cognome: ${cognome}`,
-      `Email: ${email}`,
-      `Servizio: ${servizio}`,
-      source ? `Sorgente: ${source}` : null,
-      '',
-      'Messaggio:',
-      messaggio || '(nessun messaggio)'
-    ]
-      .filter(Boolean)
-      .join('\n');
-
-    try {
-      const info = await transporter.sendMail({
-        from,
-        to,
-        replyTo: email,
-        subject,
-        text
-      });
-      // eslint-disable-next-line no-console
-      console.log('[contact] email sent', info?.messageId || '');
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn('[contact] email delivery failed', e?.message || e);
-      return res.status(502).json({ ok: false, error: 'Email delivery failed' });
-    }
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('[contact] (no SMTP configured)', { nome, cognome, email, servizio, messaggio, source });
+  if (!transporter) {
+    console.error('[contact] Error: SMTP is not configured. Missing SMTP_HOST, SMTP_USER, or SMTP_PASS.');
+    return res.status(500).json({ ok: false, error: 'Server misconfigured: SMTP not configured.' });
   }
 
-  return res.json({ ok: true });
+  const from = process.env.SMTP_FROM || `Nuova Copertura <${process.env.SMTP_USER}>`;
+  const subject = `Nuova Copertura - Richiesta preventivo (${servizio})`;
+  const text = [
+    `Nome: ${nome}`,
+    `Cognome: ${cognome}`,
+    `Email: ${email}`,
+    `Servizio: ${servizio}`,
+    source ? `Sorgente: ${source}` : null,
+    '',
+    'Messaggio:',
+    messaggio || '(nessun messaggio)'
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  try {
+    const info = await transporter.sendMail({
+      from,
+      to,
+      replyTo: email,
+      subject,
+      text
+    });
+    // eslint-disable-next-line no-console
+    console.log('[contact] email sent', info?.messageId || '');
+    return res.json({ ok: true });
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('[contact] email delivery failed with error:', e);
+    return res.status(502).json({ ok: false, error: 'Email delivery failed' });
+  }
 });
 
 const port = Number(process.env.PORT || '3000');

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nuovacopertura-web:latest
+    container_name: nuovacopertura_web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    networks:
+      - nuovacopertura_network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"       # Restrict to half a CPU core
+          memory: 256M      # Restrict memory to 256 MB
+        reservations:
+          cpus: "0.1"
+          memory: 128M
+
+networks:
+  nuovacopertura_network:
+    driver: bridge
+    name: nuovacopertura_bridge_net

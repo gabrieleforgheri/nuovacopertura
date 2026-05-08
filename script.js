@@ -94,7 +94,7 @@
         email: form.email?.value?.trim(),
         servizio: form.servizio?.value?.trim(),
         messaggio: form.messaggio?.value?.trim() || '',
-        source: 'nuova-copertura-instagram.html'
+        source: 'index.html'
       };
 
       try {

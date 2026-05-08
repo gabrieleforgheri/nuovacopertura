@@ -15,8 +15,37 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMobileOpen(false); });
   }
 
+  // Theme toggle (default light)
+  const themeButtons = [
+    document.getElementById('themeToggle'),
+    document.getElementById('themeToggleMobile')
+  ].filter(Boolean);
+  const themeStorageKey = 'site-theme';
+
+  const applyTheme = (theme) => {
+    const safeTheme = theme === 'dark' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', safeTheme);
+    themeButtons.forEach((btn) => {
+      const isDark = safeTheme === 'dark';
+      btn.textContent = isDark ? 'Tema chiaro' : 'Tema scuro';
+      btn.setAttribute('aria-pressed', String(isDark));
+      btn.setAttribute('aria-label', isDark ? 'Attiva tema chiaro' : 'Attiva tema scuro');
+    });
+  };
+
+  const storedTheme = localStorage.getItem(themeStorageKey);
+  applyTheme(storedTheme || 'light');
+  themeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      const nextTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem(themeStorageKey, nextTheme);
+      applyTheme(nextTheme);
+    });
+  });
+
   // Instagram embed script (renderizza i blockquote.instagram-media)
-  (function ensureInstagramEmbedScript() {
+  function ensureInstagramEmbedScript() {
     const src = 'https://www.instagram.com/embed.js';
     if ([...document.scripts].some(s => s.src === src)) return;
     const s = document.createElement('script');
@@ -27,7 +56,64 @@
       if (window.instgrm?.Embeds?.process) window.instgrm.Embeds.process();
     };
     document.body.appendChild(s);
-  })();
+  }
+
+  // Global cookie consent (site-wide)
+  const cookieConsentKey = 'cookie-consent-v1';
+  const cookieBanner = document.getElementById('cookieBanner');
+  const cookieAcceptAll = document.getElementById('cookieAcceptAll');
+  const cookieOnlyNecessary = document.getElementById('cookieOnlyNecessary');
+  const cookieRejectOptional = document.getElementById('cookieRejectOptional');
+  const cookieSettingsBtn = document.getElementById('cookieSettingsBtn');
+
+  const showCookieBanner = () => {
+    if (cookieBanner) cookieBanner.classList.add('is-visible');
+  };
+
+  const hideCookieBanner = () => {
+    if (cookieBanner) cookieBanner.classList.remove('is-visible');
+  };
+
+  const applyConsent = (choice) => {
+    if (choice === 'accepted') {
+      ensureInstagramEmbedScript();
+    }
+  };
+
+  const storedConsent = localStorage.getItem(cookieConsentKey);
+  if (!storedConsent) {
+    showCookieBanner();
+  } else {
+    applyConsent(storedConsent);
+  }
+
+  if (cookieAcceptAll) {
+    cookieAcceptAll.addEventListener('click', () => {
+      localStorage.setItem(cookieConsentKey, 'accepted');
+      hideCookieBanner();
+      applyConsent('accepted');
+    });
+  }
+
+  if (cookieRejectOptional) {
+    cookieRejectOptional.addEventListener('click', () => {
+      localStorage.setItem(cookieConsentKey, 'rejected');
+      hideCookieBanner();
+    });
+  }
+
+  if (cookieOnlyNecessary) {
+    cookieOnlyNecessary.addEventListener('click', () => {
+      localStorage.setItem(cookieConsentKey, 'necessary-only');
+      hideCookieBanner();
+    });
+  }
+
+  if (cookieSettingsBtn) {
+    cookieSettingsBtn.addEventListener('click', () => {
+      showCookieBanner();
+    });
+  }
 
   // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');

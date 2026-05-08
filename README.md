@@ -22,7 +22,8 @@ Questo approccio include:
 5. **Metodo 2: Repository Git**
    - Inserisci l'URL di questo repository GitHub.
    - Usa `docker-compose.yml` come percorso del compose file.
-   - Aggiungi le variabili d'ambiente necessarie nell'interfaccia Portainer.
+   - **IMPORTANTE:** Seleziona "Load environment variables from file" su **OFF** (oppure assicurati che cerchi un file inesistente, oppure usa la sezione `Environment variables` se disponibile per la tua versione) in quanto il file `.env` non viene committato nel repository per motivi di sicurezza (vulnerabilità se caricato online con credenziali).
+   - Inserisci le tue variabili d'ambiente usando la sezione "Environment variables" di Portainer (Advanced mode per incollare il blocco).
 6. Clicca **Deploy the stack**.
 7. L'applicazione sarà esposta sulla porta `3000` mappata all'host, quindi naviga a `http://<IP-SERVER>:3000`.
 

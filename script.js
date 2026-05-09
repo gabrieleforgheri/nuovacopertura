@@ -48,6 +48,7 @@
     document.getElementById('themeToggleMobile')
   ].filter(Boolean);
   const themeStorageKey = 'site-theme';
+  const colorSchemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   const applyTheme = (theme) => {
     const safeTheme = theme === 'dark' ? 'dark' : 'light';
@@ -65,7 +66,7 @@
   };
 
   const storedTheme = localStorage.getItem(themeStorageKey);
-  applyTheme(storedTheme || 'light');
+  applyTheme(storedTheme || (colorSchemeQuery.matches ? 'dark' : 'light'));
   themeButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const isDark = document.body.getAttribute('data-theme') === 'dark';
@@ -73,6 +74,10 @@
       localStorage.setItem(themeStorageKey, nextTheme);
       applyTheme(nextTheme);
     });
+  });
+  colorSchemeQuery.addEventListener('change', (e) => {
+    if (localStorage.getItem(themeStorageKey)) return;
+    applyTheme(e.matches ? 'dark' : 'light');
   });
 
   // Instagram embed script (renderizza i blockquote.instagram-media)
@@ -96,6 +101,7 @@
   const cookieOnlyNecessary = document.getElementById('cookieOnlyNecessary');
   const cookieRejectOptional = document.getElementById('cookieRejectOptional');
   const cookieSettingsBtn = document.getElementById('cookieSettingsBtn');
+  const inlineAcceptSocialCookies = document.getElementById('inlineAcceptSocialCookies');
   const igEmbeds = document.getElementById('igEmbeds');
 
   const showCookieBanner = () => {
@@ -149,6 +155,14 @@
   if (cookieSettingsBtn) {
     cookieSettingsBtn.addEventListener('click', () => {
       showCookieBanner();
+    });
+  }
+
+  if (inlineAcceptSocialCookies) {
+    inlineAcceptSocialCookies.addEventListener('click', () => {
+      localStorage.setItem(cookieConsentKey, 'accepted');
+      hideCookieBanner();
+      applyConsent('accepted');
     });
   }
 

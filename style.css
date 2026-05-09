@@ -547,6 +547,8 @@
     gap: 48px;
     align-items: start;
   }
+  .instagram-copy,
+  .instagram-panel { min-width: 0; }
   .instagram-copy .section-sub { margin-bottom: 28px; max-width: 560px; }
   .instagram-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
   .instagram-stats {
@@ -591,6 +593,12 @@
     margin-bottom: 18px;
     padding-bottom: 14px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .instagram-embed-head > div:last-child {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
   .instagram-profile {
     display: flex;
@@ -653,6 +661,12 @@
     text-align: center;
   }
   .ig-embed-fallback a { color: var(--orange-light); }
+  .ig-consent-btn {
+    margin-top: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
   .reel-card {
     position: relative;
     min-height: 230px;
@@ -942,8 +956,13 @@ body[data-theme='light'] .service-desc {
     .about-badge { bottom: -16px; right: 0; width: 110px; height: 110px; }
     .about-badge strong { font-size: 36px; }
     .instagram-wrap { grid-template-columns: 1fr; gap: 32px; }
+    .instagram-panel { padding: 16px; }
+    .instagram-embed-head { align-items: flex-start; }
+    .instagram-embed-head > div:last-child { width: 100%; justify-content: flex-start; }
+    .instagram-embed-head > div:last-child .btn-ghost { width: 100%; text-align: center; }
     .instagram-feed { grid-template-columns: 1fr; }
     .instagram-embeds { grid-template-columns: 1fr; }
+    .ig-embed { min-height: 220px; }
     .instagram-stats { grid-template-columns: 1fr; }
     #contatti { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
     .form-row { grid-template-columns: 1fr; }

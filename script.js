@@ -11,6 +11,7 @@
 
     const setMobileOpen = (open) => {
       mobileNav.classList.toggle('open', open);
+      navToggle.classList.toggle('is-open', open);
       mobileNav.setAttribute('aria-hidden', open ? 'false' : 'true');
       navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       navToggle.setAttribute('aria-label', open ? 'Chiudi menu' : 'Apri menu');
@@ -53,7 +54,9 @@
     document.body.setAttribute('data-theme', safeTheme);
     themeButtons.forEach((btn) => {
       const isDark = safeTheme === 'dark';
-      btn.innerHTML = `<span class="theme-icon" aria-hidden="true">${isDark ? '☀️' : '🌙'}</span>`;
+      const icon = `<span class="theme-icon" aria-hidden="true">${isDark ? '☀️' : '🌙'}</span>`;
+      const label = btn.classList.contains('theme-toggle-mobile') ? '<span class="theme-toggle-label">Tema</span>' : '';
+      btn.innerHTML = `${icon}${label}`;
       btn.setAttribute('aria-pressed', String(isDark));
       const nextLabel = isDark ? 'Attiva tema chiaro' : 'Attiva tema scuro';
       btn.setAttribute('aria-label', nextLabel);
@@ -146,6 +149,86 @@
   if (cookieSettingsBtn) {
     cookieSettingsBtn.addEventListener('click', () => {
       showCookieBanner();
+    });
+  }
+
+  // Service modal (same page detail panel)
+  const serviceModal = document.getElementById('serviceModal');
+  const serviceModalTitle = document.getElementById('serviceModalTitle');
+  const serviceModalText = document.getElementById('serviceModalText');
+  const serviceModalImage = document.getElementById('serviceModalImage');
+  const serviceModalClose = document.getElementById('serviceModalClose');
+  const serviceCards = document.querySelectorAll('.service-card[data-service]');
+  const serviceData = {
+    rifacimento: {
+      title: 'Rifacimento coperture industriali e civili',
+      text: 'Il rifacimento coperture industriali e civili migliora sicurezza, isolamento e durata del tetto. Analizziamo lo stato della copertura e realizziamo la sostituzione con materiali certificati.',
+      image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80'
+    },
+    'linea-vita': {
+      title: 'Linea vita',
+      text: 'La linea vita e essenziale per la sicurezza sul lavoro in quota. Installiamo sistemi anticaduta certificati per operare in copertura in conformita normativa.',
+      image: 'https://images.unsplash.com/photo-1501331755467-7cbec1d0c055?auto=format&fit=crop&w=1200&q=80'
+    },
+    parapetti: {
+      title: 'Parapetti permanenti',
+      text: 'I parapetti permanenti garantiscono protezione stabile su coperture e bordi esposti. Forniamo soluzioni resistenti e adatte a contesti industriali e civili.',
+      image: 'https://images.unsplash.com/photo-1762438440807-adaaf10faf64?auto=format&fit=crop&w=1200&q=80'
+    },
+    'scale-marinare': {
+      title: 'Scale marinare',
+      text: 'Le scale marinare consentono accesso sicuro alle coperture e alle aree tecniche. Le installiamo con fissaggi certificati e configurazioni su misura.',
+      image: 'https://images.unsplash.com/photo-1542222105-31a21d807f09?auto=format&fit=crop&w=1200&q=80'
+    },
+    fotovoltaico: {
+      title: 'Montaggio e lavaggio fotovoltaico',
+      text: 'Ci occupiamo di montaggio e lavaggio fotovoltaico per mantenere alta l efficienza dell impianto e migliorare resa, durata e affidabilita energetica.',
+      image: 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?auto=format&fit=crop&w=1200&q=80'
+    },
+    manutenzione: {
+      title: 'Manutenzione e pulizia tetto',
+      text: 'La manutenzione e pulizia tetto previene infiltrazioni e degrado. Programmiamo controlli periodici, pulizia gronde e interventi rapidi.',
+      image: 'https://images.unsplash.com/photo-1760331840361-d751cfc1becf?auto=format&fit=crop&w=1200&q=80'
+    },
+    amianto: {
+      title: 'Smaltimento amianto',
+      text: 'Lo smaltimento amianto richiede procedure rigorose. Gestiamo bonifica, rimozione e conferimento autorizzato con documentazione completa e massima sicurezza.',
+      image: 'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?auto=format&fit=crop&w=1200&q=80'
+    }
+  };
+
+  const closeServiceModal = () => {
+    if (!serviceModal) return;
+    serviceModal.classList.remove('open');
+    serviceModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  const openServiceModal = (key) => {
+    const item = serviceData[key];
+    if (!item || !serviceModal || !serviceModalTitle || !serviceModalText || !serviceModalImage) return;
+    serviceModalTitle.textContent = item.title;
+    serviceModalText.textContent = item.text;
+    serviceModalImage.src = item.image;
+    serviceModalImage.alt = item.title;
+    serviceModal.classList.add('open');
+    serviceModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  serviceCards.forEach((card) => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      openServiceModal(card.dataset.service);
+    });
+  });
+
+  if (serviceModalClose) {
+    serviceModalClose.addEventListener('click', closeServiceModal);
+  }
+  if (serviceModal) {
+    serviceModal.addEventListener('click', (e) => {
+      if (e.target instanceof HTMLElement && e.target.dataset.closeModal === 'true') closeServiceModal();
     });
   }
 

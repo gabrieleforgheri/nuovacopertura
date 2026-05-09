@@ -29,9 +29,8 @@
         <span class="theme-icon" aria-hidden="true">🌙</span>
       </button>
       <button class="nav-toggle" type="button" aria-label="Apri menu" aria-expanded="false" aria-controls="mobileNav">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
+      <svg class="nav-toggle-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      <svg class="nav-toggle-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
       </button>
     </div>
   </div>
@@ -39,6 +38,7 @@
 <div id="mobileNav" class="mobile-nav" aria-hidden="true">
   <button id="themeToggleMobile" class="theme-toggle theme-toggle-mobile" type="button" aria-label="Attiva tema scuro" aria-pressed="false" title="Attiva tema scuro">
     <span class="theme-icon" aria-hidden="true">🌙</span>
+    <span class="theme-toggle-label">Tema</span>
   </button>
   <a href="#servizi">Servizi</a>
   <a href="#chi-siamo">Chi siamo</a>
@@ -92,52 +92,98 @@
     <p class="section-sub">Interveniamo su ogni tipologia di copertura, con materiali certificati e squadre specializzate.</p>
   </div>
   <div class="servizi-grid">
-    <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1501331755467-7cbec1d0c055?auto=format&fit=crop&w=1200&q=80" alt="Linea vita">
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="rifacimento">
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80" alt="Rifacimento coperture industriali e civili">
       <div class="service-overlay">
         <span class="service-num">01</span>
+        <div class="service-name">Rifacimento coperture industriali e civili</div>
+        <div class="service-desc">Interventi completi su coperture industriali e civili con materiali certificati, tempi certi e massima sicurezza in cantiere.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </a>
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="linea-vita">
+      <img src="https://images.unsplash.com/photo-1501331755467-7cbec1d0c055?auto=format&fit=crop&w=1200&q=80" alt="Linea vita">
+      <div class="service-overlay">
+        <span class="service-num">02</span>
         <div class="service-name">Linea vita</div>
         <div class="service-desc">Progettazione e installazione di sistemi anticaduta certificati per lavorare in quota in sicurezza e in conformità normativa.</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
-    </div>
-    <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1762438440807-adaaf10faf64?auto=format&fit=crop&w=1200&q=80" alt="Parapetti">
-      <div class="service-overlay">
-        <span class="service-num">02</span>
-        <div class="service-name">Parapetti</div>
-        <div class="service-desc">Fornitura e posa di parapetti e protezioni perimetrali per tetti e terrazzi, temporanei o permanenti.</div>
-        <div class="service-arrow">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </div>
-    </div>
-    <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1542222105-31a21d807f09?auto=format&fit=crop&w=1200&q=80" alt="Scale Marinare">
+    </a>
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="parapetti">
+      <img src="https://images.unsplash.com/photo-1762438440807-adaaf10faf64?auto=format&fit=crop&w=1200&q=80" alt="Parapetti permanenti">
       <div class="service-overlay">
         <span class="service-num">03</span>
-        <div class="service-name">Scale Marinare</div>
-        <div class="service-desc">Installazione di scale fisse di accesso in sicurezza (uscita in copertura, manutenzione impianti, accessi tecnici).</div>
+        <div class="service-name">Parapetti permanenti</div>
+        <div class="service-desc">Fornitura e posa di parapetti permanenti per coperture e terrazzi, progettati per protezione continua e durata nel tempo.</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
-    </div>
-    <div class="service-card reveal">
-      <img src="https://images.unsplash.com/photo-1760331840361-d751cfc1becf?auto=format&fit=crop&w=1200&q=80" alt="Manutenzione e pulizia">
+    </a>
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="scale-marinare">
+      <img src="https://images.unsplash.com/photo-1542222105-31a21d807f09?auto=format&fit=crop&w=1200&q=80" alt="Scale marinare">
       <div class="service-overlay">
         <span class="service-num">04</span>
-        <div class="service-name">Manutenzione e pulizia</div>
+        <div class="service-name">Scale marinare</div>
+        <div class="service-desc">Installazione di scale fisse di accesso in sicurezza per uscita in copertura, manutenzione impianti e accessi tecnici.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </a>
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="fotovoltaico">
+      <img src="https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?auto=format&fit=crop&w=1200&q=80" alt="Montaggio e lavaggio fotovoltaico">
+      <div class="service-overlay">
+        <span class="service-num">05</span>
+        <div class="service-name">Montaggio e lavaggio fotovoltaico</div>
+        <div class="service-desc">Installazione e lavaggio pannelli fotovoltaici per massimizzare resa energetica, efficienza e sicurezza degli impianti.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </a>
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="manutenzione">
+      <img src="https://images.unsplash.com/photo-1760331840361-d751cfc1becf?auto=format&fit=crop&w=1200&q=80" alt="Manutenzione e pulizia tetto">
+      <div class="service-overlay">
+        <span class="service-num">06</span>
+        <div class="service-name">Manutenzione e pulizia tetto</div>
         <div class="service-desc">Ispezioni periodiche, pulizia gronde e punti critici, piccole riparazioni e interventi rapidi per prevenire infiltrazioni.</div>
         <div class="service-arrow">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
-    </div>
+    </a>
+    <a class="service-card reveal" href="#servizio-dettaglio" data-service="amianto">
+      <img src="https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?auto=format&fit=crop&w=1200&q=80" alt="Smaltimento amianto">
+      <div class="service-overlay">
+        <span class="service-num">07</span>
+        <div class="service-name">Smaltimento amianto</div>
+        <div class="service-desc">Bonifica e smaltimento amianto secondo normativa vigente, con gestione completa della pratica e sicurezza certificata.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </a>
   </div>
 </section>
+
+<div id="serviceModal" class="service-modal" aria-hidden="true" role="dialog" aria-label="Dettaglio servizio">
+  <div class="service-modal-backdrop" data-close-modal="true"></div>
+  <div class="service-modal-panel">
+    <button id="serviceModalClose" class="service-modal-close" type="button" aria-label="Chiudi dettaglio servizio">✕</button>
+    <img id="serviceModalImage" src="" alt="">
+    <div class="service-modal-content">
+      <div class="section-tag">Cosa facciamo</div>
+      <h3 id="serviceModalTitle" class="section-title"></h3>
+      <p id="serviceModalText"></p>
+    </div>
+  </div>
+</div>
 
 <!-- CHI SIAMO -->
 <section id="chi-siamo">

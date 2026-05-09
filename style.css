@@ -27,13 +27,14 @@
     --panel-border: rgba(255,255,255,0.08);
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: hidden; }
 
   body {
     font-family: 'Barlow', sans-serif;
     background: var(--dark);
     color: var(--white);
     overflow-x: hidden;
+    max-width: 100%;
   }
 
   /* ── NAV ── */
@@ -895,8 +896,8 @@
     .nav-actions { gap: 8px; }
     .theme-toggle { display: inline-flex; width: 40px; height: 40px; }
     .mobile-nav { padding-top: 78px; }
-    .logo-wordmark { font-size: 24px; }
-    nav.nav-scrolled .logo-wordmark { font-size: 20px; }
+    .logo-wordmark { font-size: 20px; letter-spacing: 1px; }
+    nav.nav-scrolled .logo-wordmark { font-size: 18px; }
     .logo-img { height: 70px; }
     nav.nav-scrolled .logo-img { height: 56px; }
     section { padding: 70px 24px; }
@@ -927,6 +928,7 @@ nav.nav-scrolled .logo-img { height: 64px; }
   font-size: 34px;
   letter-spacing: 1.6px;
   line-height: 1;
+  white-space: nowrap;
 }
 nav.nav-scrolled .logo-wordmark { font-size: 28px; }
 body[data-theme='light'] .logo-wordmark-black { color: #111827; }

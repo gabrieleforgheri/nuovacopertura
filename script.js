@@ -160,7 +160,7 @@
       { prep: 'NELLE', text: 'LINEE VITA' },
       { prep: 'NEI', text: 'PARAPETTI' },
       { prep: 'NELLE', text: 'SCALE MARINARE' },
-      { prep: 'NEI', text: 'MONTAGGI FOTOVOLTAICI' },
+      { prep: 'NEI', text: 'MONTAGGI' },
       { prep: 'NELLE', text: 'MANUTENZIONI' },
       { prep: 'NEGLI', text: 'SMALTIMENTI' }
     ];

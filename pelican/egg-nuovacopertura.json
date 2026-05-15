@@ -17,7 +17,7 @@
     "Nodejs 20": "ghcr.io/pelican-eggs/yolks:nodejs_20"
   },
   "file_denylist": [],
-  "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install --omit=dev; fi; /usr/local/bin/node /home/container/server.js",
+  "startup": "if [[ -d .git ]] && [[ \"${AUTO_UPDATE}\" == \"1\" ]]; then echo \"[deploy] git pull...\"; git pull --ff-only && echo \"[deploy] at $(git rev-parse --short HEAD)\" || echo \"[deploy] git pull failed\"; else echo \"[deploy] git pull skipped (AUTO_UPDATE=${AUTO_UPDATE:-0})\"; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install --omit=dev; fi; /usr/local/bin/node /home/container/server.js",
   "config": {
     "files": "{}",
     "startup": "{\r\n  \"done\": [\r\n    \"[Nuova Copertura] Listening on\"\r\n  ]\r\n}",
@@ -64,9 +64,9 @@
     },
     {
       "name": "Auto Update",
-      "description": "git pull all'avvio del server.",
+      "description": "1 = git pull --ff-only a ogni avvio/restart (consigliato se deploy da GitHub). 0 = non aggiorna il codice al restart.",
       "env_variable": "AUTO_UPDATE",
-      "default_value": "0",
+      "default_value": "1",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["required", "boolean"],

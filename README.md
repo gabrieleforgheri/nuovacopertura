@@ -45,7 +45,9 @@ All’avvio nei log: `[smtp] ready` oppure `[smtp] verify failed` con il motivo.
 
 **Pelican:** le variabili vanno impostate in **Server → Variables** (o Startup). Se usi l’egg generico, aggiungi manualmente tutte le `SMTP_*` e `CONTACT_TO`. Dopo ogni modifica: **Restart**.
 
-**Deploy da Git:** imposta `GIT_ADDRESS` (es. `https://github.com/tuo-user/nuovacopertura`), `BRANCH` = `main`, `USER_UPLOAD` = `0`, poi **Reinstall**.
+**Deploy da Git:** imposta `GIT_ADDRESS` (es. `https://github.com/gabrieleforgheri/nuovacopertura`), `BRANCH` = `main`, `USER_UPLOAD` = `0`, poi **Reinstall**.
+
+**Aggiornare il codice al restart:** il restart esegue solo lo **startup**, non reinstalla. Per scaricare i commit da GitHub imposta **`AUTO_UPDATE` = `1`** (egg Nuova Copertura: default `1`). Nei log vedrai `[deploy] git pull...` e il commit. Se vedi `[deploy] git pull skipped (AUTO_UPDATE=0)`, attiva la variabile sul server e riavvia. Senza cartella `.git` (solo upload SFTP) il pull non è possibile: usa **Reinstall** o carica i file a mano.
 
 **Upload manuale (SFTP):** `USER_UPLOAD` = `1`, carica tutti i file del repo in `/home/container`, poi **Reinstall** (solo `npm install`).
 
@@ -59,7 +61,7 @@ Se usi solo l’egg generico:
 | **Startup done** (modifica nell’egg o nel server) | `[Nuova Copertura] Listening on` |
 | Variabili pannello | Aggiungi manualmente `CONTACT_TO`, `SMTP_*` come sopra |
 
-Lo startup del generico esegue già `npm install` e `node /home/container/${MAIN_FILE}`.
+Lo startup del generico esegue già `npm install` e `node /home/container/${MAIN_FILE}`. Per il pull da Git: **`AUTO_UPDATE` = `1`** e repo clonato in install.
 
 ### 5. Avvio e URL
 

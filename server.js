@@ -51,32 +51,61 @@ function requiredString(value, maxLen) {
 
 let cachedTransporter = null;
 
+function buildMailFrom() {
+  const explicit = process.env.SMTP_FROM?.trim();
+  if (explicit) return explicit;
+  const user = process.env.SMTP_USER?.trim();
+  if (!user) return null;
+  const name = process.env.SMTP_FROM_NAME?.trim() || 'Preventivo';
+  return `${name} <${user}>`;
+}
+
+function smtpSecureForPort(port) {
+  const secureEnv = process.env.SMTP_SECURE;
+  if (typeof secureEnv === 'string' && secureEnv.length > 0) {
+    return secureEnv.toLowerCase() === 'true' || secureEnv === '1';
+  }
+  return port === 465;
+}
+
 async function getTransporter() {
   if (cachedTransporter) return cachedTransporter;
 
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
+  const host = process.env.SMTP_HOST?.trim();
+  const user = process.env.SMTP_USER?.trim();
   const pass = process.env.SMTP_PASS;
 
   if (!host || !user || !pass) return null;
 
   const port = Number(process.env.SMTP_PORT || '587');
-  const secureEnv = process.env.SMTP_SECURE;
-  const secure =
-    typeof secureEnv === 'string'
-      ? secureEnv.toLowerCase() === 'true'
-      : port === 465;
+  const secure = smtpSecureForPort(port);
 
   cachedTransporter = nodemailer.createTransport({
-    host: host,
+    host,
     port,
     secure,
     auth: { user, pass },
     connectionTimeout: 15_000,
     greetingTimeout: 15_000,
-    socketTimeout: 20_000
+    socketTimeout: 20_000,
+    ...(secure ? {} : { requireTLS: true })
   });
   return cachedTransporter;
+}
+
+async function logSmtpStatus() {
+  const transporter = await getTransporter();
+  if (!transporter) {
+    console.warn('[smtp] not configured — set SMTP_HOST, SMTP_USER, SMTP_PASS (and CONTACT_TO) in the panel');
+    return;
+  }
+  try {
+    await transporter.verify();
+    console.log('[smtp] ready —', buildMailFrom() || process.env.SMTP_USER);
+  } catch (e) {
+    cachedTransporter = null;
+    console.error('[smtp] verify failed:', e?.message || e);
+  }
 }
 
 // very small in-memory rate limit (per-IP)
@@ -125,8 +154,13 @@ app.post('/api/contact', rateLimit, async (req, res) => {
     return res.status(500).json({ ok: false, error: 'Server misconfigured: SMTP not configured.' });
   }
 
-  const from = process.env.SMTP_FROM || `Nuova Copertura <${process.env.SMTP_USER}>`;
-  const subject = `Nuova Copertura - Richiesta preventivo (${servizio})`;
+  const from = buildMailFrom();
+  if (!from) {
+    console.error('[contact] Error: SMTP_FROM / SMTP_USER not configured.');
+    return res.status(500).json({ ok: false, error: 'Server misconfigured: sender not set.' });
+  }
+
+  const subject = `Richiesta preventivo — ${servizio}`;
   const text = [
     `Nome: ${nome}`,
     `Cognome: ${cognome}`,
@@ -152,8 +186,9 @@ app.post('/api/contact', rateLimit, async (req, res) => {
     console.log('[contact] email sent', info?.messageId || '');
     return res.json({ ok: true });
   } catch (e) {
+    cachedTransporter = null;
     // eslint-disable-next-line no-console
-    console.error('[contact] email delivery failed with error:', e);
+    console.error('[contact] email delivery failed:', e?.message || e);
     return res.status(502).json({ ok: false, error: 'Email delivery failed' });
   }
 });
@@ -165,5 +200,6 @@ const host = process.env.HOST || '0.0.0.0';
 app.listen(port, host, () => {
   // eslint-disable-next-line no-console
   console.log(`[Nuova Copertura] Listening on ${host}:${port}`);
+  void logSmtpStatus();
 });
 

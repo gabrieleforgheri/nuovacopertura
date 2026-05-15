@@ -26,15 +26,18 @@ In alternativa puoi usare l’egg generico **node.js generic** da [pelican-eggs/
 
 ### 3. Variabili egg / ambiente
 
-| Variabile | Obbligatoria | Note |
-|-----------|--------------|------|
-| `CONTACT_TO` | Sì | Email destinazione form |
-| `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | Sì* | Invio email reale |
-| `SMTP_PORT` | No | Default `587` |
-| `SMTP_SECURE` | No | `true` per porta 465 |
-| `SMTP_FROM` | No | Default da `SMTP_USER` |
+| Variabile | Obbligatoria | Valore di esempio (Zoho EU) |
+|-----------|--------------|----------------------------|
+| `CONTACT_TO` | Sì | `info@yrb4g.com` |
+| `SMTP_HOST` | Sì | `smtp.zoho.eu` |
+| `SMTP_PORT` | No | `465` |
+| `SMTP_SECURE` | No | `true` (SMTPS) |
+| `SMTP_USER` | Sì | `info@yrb4g.com` |
+| `SMTP_PASS` | Sì | password casella Zoho |
+| `SMTP_FROM_NAME` | No | `Preventivo` |
+| `SMTP_FROM` | No | `Preventivo <info@yrb4g.com>` |
 
-\*Senza SMTP il form risponde con errore 500 (configurazione server).
+All’avvio nei log: `[smtp] ready` oppure `[smtp] verify failed` con il motivo. Senza SMTP il form risponde 500.
 
 **Deploy da Git:** imposta `GIT_ADDRESS` (es. `https://github.com/tuo-user/nuovacopertura`), `BRANCH` = `main`, `USER_UPLOAD` = `0`, poi **Reinstall**.
 

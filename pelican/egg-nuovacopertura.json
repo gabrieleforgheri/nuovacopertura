@@ -93,7 +93,7 @@
       "name": "Contact destination email",
       "description": "Indirizzo che riceve le richieste dal form (CONTACT_TO).",
       "env_variable": "CONTACT_TO",
-      "default_value": "info@nuovacopertura.it",
+      "default_value": "info@yrb4g.com",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["required", "string", "email"],
@@ -103,7 +103,7 @@
       "name": "SMTP Host",
       "description": "Host SMTP (es. smtp.zoho.eu).",
       "env_variable": "SMTP_HOST",
-      "default_value": "",
+      "default_value": "smtp.zoho.eu",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["nullable", "string"],
@@ -113,7 +113,7 @@
       "name": "SMTP Port",
       "description": "Porta SMTP (465 o 587).",
       "env_variable": "SMTP_PORT",
-      "default_value": "587",
+      "default_value": "465",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["nullable", "string"],
@@ -123,7 +123,7 @@
       "name": "SMTP Secure (TLS)",
       "description": "true per SSL/TLS (tipico su porta 465).",
       "env_variable": "SMTP_SECURE",
-      "default_value": "false",
+      "default_value": "true",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["nullable", "string"],
@@ -133,7 +133,7 @@
       "name": "SMTP User",
       "description": "Username SMTP.",
       "env_variable": "SMTP_USER",
-      "default_value": "",
+      "default_value": "info@yrb4g.com",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["nullable", "string"],
@@ -150,14 +150,24 @@
       "sort": 15
     },
     {
-      "name": "SMTP From",
-      "description": "Mittente (es. \"Nuova Copertura <info@example.com>\").",
-      "env_variable": "SMTP_FROM",
-      "default_value": "",
+      "name": "SMTP From name",
+      "description": "Nome visualizzato del mittente (se SMTP_FROM è vuoto).",
+      "env_variable": "SMTP_FROM_NAME",
+      "default_value": "Preventivo",
       "user_viewable": true,
       "user_editable": true,
       "rules": ["nullable", "string"],
       "sort": 16
+    },
+    {
+      "name": "SMTP From",
+      "description": "Mittente completo (es. \"Preventivo <info@yrb4g.com>\"). Lascia vuoto per usare SMTP_FROM_NAME + SMTP_USER.",
+      "env_variable": "SMTP_FROM",
+      "default_value": "Preventivo <info@yrb4g.com>",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": ["nullable", "string"],
+      "sort": 17
     }
   ]
 }

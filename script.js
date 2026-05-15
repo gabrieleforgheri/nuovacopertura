@@ -336,6 +336,21 @@
       btn.textContent = busy ? 'Invio in corso…' : originalBtnText;
     };
 
+    const contactErrorMessage = (code) => {
+      switch (code) {
+        case 'smtp_not_configured':
+          return 'Servizio email non configurato sul server (SMTP). Contattaci per telefono o email.';
+        case 'contact_not_configured':
+          return 'Destinatario email non configurato sul server. Contattaci per telefono o email.';
+        case 'delivery_failed':
+          return 'Invio non riuscito (errore SMTP). Riprova più tardi o contattaci direttamente.';
+        case 'Too many requests':
+          return 'Troppe richieste in poco tempo. Attendi un minuto e riprova.';
+        default:
+          return 'Errore durante l’invio. Riprova tra poco oppure contattaci via telefono/email.';
+      }
+    };
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       setBusy(true);
@@ -360,7 +375,7 @@
         showSuccess();
       } catch (err) {
         setBusy(false);
-        alert('Errore durante l’invio. Riprova tra poco oppure contattaci via telefono/email.');
+        alert(contactErrorMessage(err?.message));
       }
     });
   }

@@ -7,6 +7,20 @@ import { fileURLToPath } from 'url';
 
 dotenv.config();
 
+/** Pelican/panel values may include wrapping quotes or stray spaces */
+function env(name) {
+  const raw = process.env[name];
+  if (raw == null) return '';
+  let v = String(raw).trim();
+  if (
+    (v.startsWith('"') && v.endsWith('"')) ||
+    (v.startsWith("'") && v.endsWith("'"))
+  ) {
+    v = v.slice(1, -1);
+  }
+  return v;
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -34,6 +48,15 @@ app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+app.get('/api/health', async (_req, res) => {
+  const smtp = await verifySmtp();
+  res.json({
+    ok: true,
+    contactTo: env('CONTACT_TO') || null,
+    smtp
+  });
+});
+
 function isValidEmail(email) {
   if (typeof email !== 'string') return false;
   const e = email.trim();
@@ -52,17 +75,28 @@ function requiredString(value, maxLen) {
 let cachedTransporter = null;
 
 function buildMailFrom() {
-  const explicit = process.env.SMTP_FROM?.trim();
+  const explicit = env('SMTP_FROM');
   if (explicit) return explicit;
-  const user = process.env.SMTP_USER?.trim();
+  const user = env('SMTP_USER');
   if (!user) return null;
-  const name = process.env.SMTP_FROM_NAME?.trim() || 'Preventivo';
+  const name = env('SMTP_FROM_NAME') || 'Preventivo';
   return `${name} <${user}>`;
 }
 
+function smtpConfigSummary() {
+  return {
+    contactTo: Boolean(env('CONTACT_TO')),
+    host: env('SMTP_HOST') || null,
+    port: env('SMTP_PORT') || '587',
+    secure: env('SMTP_SECURE') || '(auto)',
+    user: env('SMTP_USER') ? 'set' : 'missing',
+    pass: env('SMTP_PASS') ? 'set' : 'missing'
+  };
+}
+
 function smtpSecureForPort(port) {
-  const secureEnv = process.env.SMTP_SECURE;
-  if (typeof secureEnv === 'string' && secureEnv.length > 0) {
+  const secureEnv = env('SMTP_SECURE');
+  if (secureEnv.length > 0) {
     return secureEnv.toLowerCase() === 'true' || secureEnv === '1';
   }
   return port === 465;
@@ -71,41 +105,63 @@ function smtpSecureForPort(port) {
 async function getTransporter() {
   if (cachedTransporter) return cachedTransporter;
 
-  const host = process.env.SMTP_HOST?.trim();
-  const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASS;
+  const host = env('SMTP_HOST');
+  const user = env('SMTP_USER');
+  const pass = env('SMTP_PASS');
 
   if (!host || !user || !pass) return null;
 
-  const port = Number(process.env.SMTP_PORT || '587');
+  const port = Number(env('SMTP_PORT') || '587');
   const secure = smtpSecureForPort(port);
+  const debug = env('SMTP_DEBUG') === '1';
 
   cachedTransporter = nodemailer.createTransport({
     host,
     port,
     secure,
     auth: { user, pass },
-    connectionTimeout: 15_000,
-    greetingTimeout: 15_000,
-    socketTimeout: 20_000,
-    ...(secure ? {} : { requireTLS: true })
+    connectionTimeout: 20_000,
+    greetingTimeout: 20_000,
+    socketTimeout: 30_000,
+    tls: { minVersion: 'TLSv1.2' },
+    ...(secure ? {} : { requireTLS: true }),
+    ...(debug ? { logger: true, debug: true } : {})
   });
   return cachedTransporter;
 }
 
-async function logSmtpStatus() {
+async function verifySmtp() {
   const transporter = await getTransporter();
   if (!transporter) {
-    console.warn('[smtp] not configured — set SMTP_HOST, SMTP_USER, SMTP_PASS (and CONTACT_TO) in the panel');
-    return;
+    return { ok: false, error: 'missing_config', summary: smtpConfigSummary() };
   }
   try {
     await transporter.verify();
-    console.log('[smtp] ready —', buildMailFrom() || process.env.SMTP_USER);
+    return { ok: true, from: buildMailFrom(), summary: smtpConfigSummary() };
   } catch (e) {
     cachedTransporter = null;
-    console.error('[smtp] verify failed:', e?.message || e);
+    return {
+      ok: false,
+      error: e?.message || String(e),
+      code: e?.code || null,
+      summary: smtpConfigSummary()
+    };
   }
+}
+
+async function logSmtpStatus() {
+  const result = await verifySmtp();
+  if (!result.ok) {
+    if (result.error === 'missing_config') {
+      console.warn('[smtp] not configured:', result.summary);
+      console.warn('[smtp] in Pelican: Server → Variables → SMTP_HOST, SMTP_USER, SMTP_PASS, CONTACT_TO');
+    } else {
+      console.error('[smtp] verify failed:', result.error, result.code ? `(${result.code})` : '');
+      console.error('[smtp] config:', result.summary);
+    }
+    return;
+  }
+  console.log('[smtp] ready —', result.from);
 }
 
 // very small in-memory rate limit (per-IP)
@@ -141,23 +197,23 @@ app.post('/api/contact', rateLimit, async (req, res) => {
     return res.status(400).json({ ok: false, error: 'Invalid email' });
   }
 
-  const to = process.env.CONTACT_TO || '';
+  const to = env('CONTACT_TO');
   if (!to) {
-    console.error('[contact] Error: CONTACT_TO not configured in environment.');
-    return res.status(500).json({ ok: false, error: 'Server misconfigured: destination email not set.' });
+    console.error('[contact] CONTACT_TO not set');
+    return res.status(500).json({ ok: false, error: 'contact_not_configured' });
   }
 
   const transporter = await getTransporter();
 
   if (!transporter) {
-    console.error('[contact] Error: SMTP is not configured. Missing SMTP_HOST, SMTP_USER, or SMTP_PASS.');
-    return res.status(500).json({ ok: false, error: 'Server misconfigured: SMTP not configured.' });
+    console.error('[contact] SMTP missing:', smtpConfigSummary());
+    return res.status(500).json({ ok: false, error: 'smtp_not_configured' });
   }
 
   const from = buildMailFrom();
   if (!from) {
-    console.error('[contact] Error: SMTP_FROM / SMTP_USER not configured.');
-    return res.status(500).json({ ok: false, error: 'Server misconfigured: sender not set.' });
+    console.error('[contact] SMTP_FROM / SMTP_USER not set');
+    return res.status(500).json({ ok: false, error: 'sender_not_configured' });
   }
 
   const subject = `Richiesta preventivo — ${servizio}`;
@@ -188,8 +244,12 @@ app.post('/api/contact', rateLimit, async (req, res) => {
   } catch (e) {
     cachedTransporter = null;
     // eslint-disable-next-line no-console
-    console.error('[contact] email delivery failed:', e?.message || e);
-    return res.status(502).json({ ok: false, error: 'Email delivery failed' });
+    console.error('[contact] send failed:', e?.code || '', e?.message || e);
+    return res.status(502).json({
+      ok: false,
+      error: 'delivery_failed',
+      detail: e?.code || null
+    });
   }
 });
 

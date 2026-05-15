@@ -39,6 +39,12 @@ In alternativa puoi usare l’egg generico **node.js generic** da [pelican-eggs/
 
 All’avvio nei log: `[smtp] ready` oppure `[smtp] verify failed` con il motivo. Senza SMTP il form risponde 500.
 
+**Diagnostica:** apri `https://<tuo-dominio>/api/health` — vedi se SMTP è `ok: true` o l’errore (senza password).
+
+**Zoho Mail:** usa `smtp.zoho.eu`, porta `465`, `SMTP_SECURE=true`, utente = email completa. Con 2FA attiva serve una **password per app** (Zoho → Sicurezza → Password applicazioni), non la password di login del pannello.
+
+**Pelican:** le variabili vanno impostate in **Server → Variables** (o Startup). Se usi l’egg generico, aggiungi manualmente tutte le `SMTP_*` e `CONTACT_TO`. Dopo ogni modifica: **Restart**.
+
 **Deploy da Git:** imposta `GIT_ADDRESS` (es. `https://github.com/tuo-user/nuovacopertura`), `BRANCH` = `main`, `USER_UPLOAD` = `0`, poi **Reinstall**.
 
 **Upload manuale (SFTP):** `USER_UPLOAD` = `1`, carica tutti i file del repo in `/home/container`, poi **Reinstall** (solo `npm install`).

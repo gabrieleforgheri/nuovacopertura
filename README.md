@@ -1,52 +1,84 @@
 # Nuova Copertura (static + backend)
 
-Questo progetto contiene la landing HTML e una prima implementazione backend per far funzionare il form **Contattaci**.
+Landing HTML e backend Express per il form **Contattaci**.
 
-## Deploy con Docker (Portainer)
+## Deploy su Pelican Panel (consigliato)
 
-Il progetto è pronto per il deploy tramite Docker e `docker-compose`.
-Questo approccio include:
-- Un **Dockerfile** multi-stage minimale basato su Alpine Linux.
-- Un container che gira in ambiente sicuro senza utente `root`.
-- Limiti di risorsa di CPU e RAM.
-- Un **docker-compose.yml** con rete isolata bridge per sicurezza.
+Il progetto è pensato per il **Node.js egg** di Pelican: una porta allocata dal pannello, variabili d’ambiente per SMTP, niente Docker Compose.
 
-### Istruzioni (Portainer Stacks)
+### 1. Importa l’egg (opzionale ma consigliato)
 
-1. Vai nella tua istanza **Portainer**.
-2. Scegli l'environment (es. `local`) > **Stacks** > **Add stack**.
-3. Dai un nome allo stack (es. `nuova-copertura`).
-4. **Metodo 1: Editor Web**
-   - Copia e incolla il contenuto del file `docker-compose.yml` nell'editor.
-   - Nella sezione **Environment variables**, definisci le variabili copiando quelle del `.env.example` (es. `SMTP_HOST`, `CONTACT_TO`, ecc.).
-5. **Metodo 2: Repository Git**
-   - Inserisci l'URL di questo repository GitHub.
-   - Usa `docker-compose.yml` come percorso del compose file.
-   - **IMPORTANTE:** Seleziona "Load environment variables from file" su **OFF** (oppure assicurati che cerchi un file inesistente, oppure usa la sezione `Environment variables` se disponibile per la tua versione) in quanto il file `.env` non viene committato nel repository per motivi di sicurezza (vulnerabilità se caricato online con credenziali).
-   - Inserisci le tue variabili d'ambiente usando la sezione "Environment variables" di Portainer (Advanced mode per incollare il blocco).
-6. Clicca **Deploy the stack**.
-7. L'applicazione sarà esposta sulla porta `3000` mappata all'host, quindi naviga a `http://<IP-SERVER>:3000`.
+1. **Admin** → **Nests** → **Eggs** → **Import Egg**
+2. Carica [`pelican/egg-nuovacopertura.json`](pelican/egg-nuovacopertura.json)
+3. L’egg include già:
+   - avvio su `server.js`
+   - rilevamento avvio: `[Nuova Copertura] Listening on`
+   - variabili `CONTACT_TO` e SMTP nel pannello
 
-## Sviluppo Locale (Senza Docker)
+In alternativa puoi usare l’egg generico **node.js generic** da [pelican-eggs/generic](https://github.com/pelican-eggs/generic) (vedi sotto).
 
-1. Copia `.env.example` in `.env` e compila almeno `CONTACT_TO`
-2. Installa dipendenze e avvia:
+### 2. Crea il server
 
-```bash
-npm install
-npm run dev
+1. **Servers** → **Create Server**
+2. Scegli l’egg **Nuova Copertura (Node.js)** (o **node.js generic**)
+3. Immagine Docker: **Nodejs 20** (o 22)
+4. **Alloca almeno una porta** (es. `3000`) — Pelican imposta `SERVER_PORT` automaticamente; l’app ascolta su `0.0.0.0`
+
+### 3. Variabili egg / ambiente
+
+| Variabile | Obbligatoria | Note |
+|-----------|--------------|------|
+| `CONTACT_TO` | Sì | Email destinazione form |
+| `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` | Sì* | Invio email reale |
+| `SMTP_PORT` | No | Default `587` |
+| `SMTP_SECURE` | No | `true` per porta 465 |
+| `SMTP_FROM` | No | Default da `SMTP_USER` |
+
+\*Senza SMTP il form risponde con errore 500 (configurazione server).
+
+**Deploy da Git:** imposta `GIT_ADDRESS` (es. `https://github.com/tuo-user/nuovacopertura`), `BRANCH` = `main`, `USER_UPLOAD` = `0`, poi **Reinstall**.
+
+**Upload manuale (SFTP):** `USER_UPLOAD` = `1`, carica tutti i file del repo in `/home/container`, poi **Reinstall** (solo `npm install`).
+
+### 4. Egg generico “node.js generic” (senza import custom)
+
+Se usi solo l’egg generico:
+
+| Impostazione | Valore |
+|--------------|--------|
+| **Main file** (`MAIN_FILE`) | `server.js` |
+| **Startup done** (modifica nell’egg o nel server) | `[Nuova Copertura] Listening on` |
+| Variabili pannello | Aggiungi manualmente `CONTACT_TO`, `SMTP_*` come sopra |
+
+Lo startup del generico esegue già `npm install` e `node /home/container/${MAIN_FILE}`.
+
+### 5. Avvio e URL
+
+Dopo **Start**, nei log dovresti vedere:
+
+```text
+[Nuova Copertura] Listening on 0.0.0.0:<porta-allocata>
 ```
 
-Apri `http://localhost:3000/`.
+- Accesso diretto: `http://<IP-nodo>:<porta-allocata>/`
+- Con **reverse proxy** Pelican: associa il dominio alla stessa porta allocata
 
-## Contatti (API)
+Il server usa `trust proxy` per leggere l’IP reale dietro il proxy (rate limit sul form).
 
-- `POST /api/contact` JSON:
-  - `nome`, `cognome`, `email`, `servizio` (obbligatori)
-  - `messaggio` (opzionale)
+---
 
-### Invio email
+## Sviluppo locale
 
-Se configuri `SMTP_HOST/SMTP_USER/SMTP_PASS` in `.env`, il backend invia una mail a `CONTACT_TO`.
-Se non configuri SMTP, la richiesta viene comunque accettata e loggata in console (utile per sviluppo).
+1. Copia `.env.example` in `.env` e compila `CONTACT_TO` + SMTP
+2. `npm install` → `npm run dev`
+3. Apri `http://localhost:3000/` (`PORT` in `.env`; in produzione Pelican usa `SERVER_PORT`)
 
+## API contatti
+
+- `POST /api/contact` — JSON: `nome`, `cognome`, `email`, `servizio` (obbligatori); `messaggio` (opzionale)
+
+---
+
+## Deploy con Docker (opzionale)
+
+Per Portainer / Docker Compose vedi `docker-compose.yml` e `Dockerfile`. Non necessario se usi Pelican.

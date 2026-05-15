@@ -10,8 +10,11 @@
   "tags": ["nodejs", "website"],
   "features": null,
   "docker_images": {
-    "Nodejs 20": "ghcr.io/pelican-eggs/yolks:nodejs_20",
-    "Nodejs 22": "ghcr.io/pelican-eggs/yolks:nodejs_22"
+    "Nodejs 24": "ghcr.io/pelican-eggs/yolks:nodejs_24",
+    "Nodejs 23": "ghcr.io/pelican-eggs/yolks:nodejs_23",
+    "Nodejs 22": "ghcr.io/pelican-eggs/yolks:nodejs_22",
+    "Nodejs 21": "ghcr.io/pelican-eggs/yolks:nodejs_21",
+    "Nodejs 20": "ghcr.io/pelican-eggs/yolks:nodejs_20"
   },
   "file_denylist": [],
   "startup": "if [[ -d .git ]] && [[ {{AUTO_UPDATE}} == \"1\" ]]; then git pull; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install --omit=dev; fi; /usr/local/bin/node /home/container/server.js",

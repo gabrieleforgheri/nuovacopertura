@@ -21,7 +21,7 @@ In alternativa puoi usare l’egg generico **node.js generic** da [pelican-eggs/
 
 1. **Servers** → **Create Server**
 2. Scegli l’egg **Nuova Copertura (Node.js)** (o **node.js generic**)
-3. Immagine Docker: **Nodejs 20** (o 22)
+3. Immagine Docker: **Nodejs 24** (stesse yolks dell’egg generico; se `nodejs_20` non esiste sul nodo, non usarla)
 4. **Alloca almeno una porta** (es. `3000`) — Pelican imposta `SERVER_PORT` automaticamente; l’app ascolta su `0.0.0.0`
 
 ### 3. Variabili egg / ambiente

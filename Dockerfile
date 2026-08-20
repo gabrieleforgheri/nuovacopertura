@@ -1,32 +1,32 @@
-# ---- Base Node ----
-FROM node:20-alpine AS base
-WORKDIR /app
+# syntax=docker/dockerfile:1
 
 # ---- Dependencies ----
-FROM base AS dependencies
-# Copy only package files to leverage Docker layer caching
+FROM node:22-alpine AS deps
+WORKDIR /app
 COPY package.json package-lock.json ./
-# Install only production dependencies
-RUN npm ci --only=production
+# --omit=dev replaces the deprecated --only=production
+RUN npm ci --omit=dev && npm cache clean --force
 
 # ---- Release ----
-FROM base AS release
+FROM node:22-alpine AS release
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Copy application source
-COPY . .
+# dumb-init reaps zombies and forwards SIGTERM to node for a clean shutdown
+RUN apk add --no-cache dumb-init
 
-# Copy production dependencies
-COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+COPY --chown=node:node package.json server.js ./
+COPY --chown=node:node public ./public
 
-# Ensure we're running as a non-root user
 USER node
 
-# Expose port (can be overridden by environment variable, defaults to 3000)
 EXPOSE 3000
 
-# Healthcheck to verify the server is running
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/', (res) => { if (res.statusCode !== 200) process.exit(1); process.exit(0); })"
+# Honours $PORT instead of hard-coding 3000, and hits the cheap health endpoint
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD node -e "const p=process.env.PORT||3000;require('http').get('http://127.0.0.1:'+p+'/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
-# Start the server
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]

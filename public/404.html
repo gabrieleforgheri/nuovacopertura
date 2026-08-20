@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagina non trovata — Nuova Copertura</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D0D0D" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="stylesheet" href="/style.css">
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('site-theme');
+      var dark = saved ? saved === 'dark'
+                       : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+</head>
+<body>
+
+<nav aria-label="Navigazione principale">
+  <a href="/" class="logo-img-link">
+    <img src="/icon.jpg" alt="" width="150" height="150" class="logo-img">
+    <span class="logo-wordmark"><span class="logo-wordmark-black">NUOVA</span> <span class="logo-wordmark-green">COPERTURA</span></span>
+    <span class="visually-hidden">Nuova Copertura — home</span>
+  </a>
+</nav>
+
+<main class="error-page">
+  <p class="error-code">404</p>
+  <h1 class="section-title">PAGINA NON TROVATA</h1>
+  <p class="section-sub">La pagina che cerchi non esiste o è stata spostata.</p>
+  <div class="hero-btns">
+    <a href="/" class="btn-primary">Torna alla home</a>
+    <a href="/#contatti" class="btn-ghost">Richiedi un preventivo</a>
+  </div>
+</main>
+
+<footer>
+  <p class="footer-copy">
+    © <span id="footerYear">2026</span> Nuova Copertura Srl — P.IVA 04018840365
+  </p>
+  <nav class="footer-links" aria-label="Link legali">
+    <a href="/privacy">Privacy &amp; Cookie</a>
+  </nav>
+</footer>
+
+<script src="/script.js" defer></script>
+</body>
+</html>

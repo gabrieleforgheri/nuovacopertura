@@ -7,13 +7,17 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node --watch server.js",
+    "check": "node --check server.js && node --check public/script.js"
   },
   "dependencies": {
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "nodemailer": "^6.10.1"
-  }
+  },
+  "description": "Sito Nuova Copertura Srl — landing statica + backend Express per il form preventivi",
+  "license": "UNLICENSED"
 }

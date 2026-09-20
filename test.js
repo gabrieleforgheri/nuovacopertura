@@ -40,6 +40,11 @@ try {
   const csp = (await fetch(BASE)).headers.get('content-security-policy');
   assert.match(csp, /script-src 'self' 'sha256-/, 'inline script hashes missing from CSP');
   assert.doesNotMatch(csp, /instagram|fbcdn|unsafe-inline'[^;]*script/, 'third-party sources back in CSP');
+  // over plain HTTP this directive would upgrade every asset to https:// and break the page
+  assert.doesNotMatch(csp, /upgrade-insecure-requests/, 'upgrade-insecure-requests sent over plain HTTP');
+  const secureCsp = (await fetch(BASE, { headers: { 'X-Forwarded-Proto': 'https' } }))
+    .headers.get('content-security-policy');
+  assert.match(secureCsp, /upgrade-insecure-requests/, 'upgrade-insecure-requests missing behind TLS');
 
   assert.equal((await post(valid, { Origin: 'https://evil.test' })).status, 403, 'cross-origin not blocked');
   assert.equal((await post({ ...valid, servizio: 'Piscine' })).status, 400, 'service allow-list not enforced');

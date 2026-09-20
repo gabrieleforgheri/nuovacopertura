@@ -76,7 +76,7 @@ function inlineScriptHashes() {
 
 const scriptHashes = [...inlineScriptHashes()];
 
-const CSP = [
+const CSP_DIRECTIVES = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -86,12 +86,21 @@ const CSP = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
-  "connect-src 'self'",
-  'upgrade-insecure-requests'
-].join('; ');
+  "connect-src 'self'"
+];
+
+/**
+ * `upgrade-insecure-requests` only makes sense once TLS is actually available.
+ * Sent on a plain-HTTP response it rewrites every stylesheet/image/font request
+ * to https:// against a server that does not speak it, so the page renders
+ * unstyled — which is what happens when you hit the container by IP:port
+ * instead of going through the proxy. req.secure honours X-Forwarded-Proto.
+ */
+const CSP_SECURE = [...CSP_DIRECTIVES, 'upgrade-insecure-requests'].join('; ');
+const CSP_PLAIN = CSP_DIRECTIVES.join('; ');
 
 app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', CSP);
+  res.setHeader('Content-Security-Policy', req.secure ? CSP_SECURE : CSP_PLAIN);
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');

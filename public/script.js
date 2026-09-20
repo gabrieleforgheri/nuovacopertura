@@ -2,16 +2,6 @@
 (() => {
   'use strict';
 
-  /**
-   * Permalink dei post/reel Instagram da mostrare nella sezione Social.
-   * IMPORTANTE: devono essere link a singoli contenuti, es.
-   *   'https://www.instagram.com/p/CxxxxxxxxxX/'
-   *   'https://www.instagram.com/reel/CxxxxxxxxxX/'
-   * Il link al profilo (/nuovacopertura/) NON è embeddabile.
-   * Lasciando l'array vuoto resta il riquadro statico con il link al profilo.
-   */
-  const IG_PERMALINKS = [];
-
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -116,74 +106,6 @@
     if (!saved) applyTheme(e.matches ? 'dark' : 'light');
   });
 
-  // ── cookie consent ──────────────────────────────────────────────────────────
-  const CONSENT_KEY = 'cookie-consent-v2';
-  const cookieBanner = $('#cookieBanner');
-  const igEmbeds = $('#igEmbeds');
-  const igConsent = $('#igConsent');
-
-  const readConsent = () => {
-    try {
-      return localStorage.getItem(CONSENT_KEY);
-    } catch {
-      return null;
-    }
-  };
-  const writeConsent = (v) => {
-    try {
-      localStorage.setItem(CONSENT_KEY, v);
-    } catch { /* ignore */ }
-  };
-
-  const showBanner = (show) => {
-    if (cookieBanner) cookieBanner.hidden = !show;
-  };
-
-  const loadInstagramScript = () => {
-    const src = 'https://www.instagram.com/embed.js';
-    if ($$('script').some((s) => s.src === src)) {
-      window.instgrm?.Embeds?.process?.();
-      return;
-    }
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = src;
-    s.onload = () => window.instgrm?.Embeds?.process?.();
-    document.body.appendChild(s);
-  };
-
-  const renderInstagramEmbeds = () => {
-    if (!igEmbeds || IG_PERMALINKS.length === 0) return;
-    igEmbeds.dataset.state = 'embeds';
-    igEmbeds.innerHTML = IG_PERMALINKS.map(
-      (url) =>
-        `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"></blockquote>`
-    ).join('');
-    loadInstagramScript();
-  };
-
-  const applyConsent = (choice) => {
-    const accepted = choice === 'accepted';
-    // The consent prompt only makes sense if there is actually something to embed.
-    if (igConsent) igConsent.hidden = accepted || IG_PERMALINKS.length === 0;
-    if (accepted) renderInstagramEmbeds();
-  };
-
-  const consent = readConsent();
-  if (consent) applyConsent(consent);
-  else showBanner(true);
-
-  const setConsent = (value) => {
-    writeConsent(value);
-    showBanner(false);
-    applyConsent(value);
-  };
-
-  $('#cookieAcceptAll')?.addEventListener('click', () => setConsent('accepted'));
-  $('#cookieOnlyNecessary')?.addEventListener('click', () => setConsent('necessary'));
-  $('#inlineAcceptSocialCookies')?.addEventListener('click', () => setConsent('accepted'));
-  $('#cookieSettingsBtn')?.addEventListener('click', () => showBanner(true));
-
   // ── service modal ───────────────────────────────────────────────────────────
   const modal = $('#serviceModal');
   const modalTitle = $('#serviceModalTitle');
@@ -206,10 +128,7 @@
   const openModal = (card) => {
     if (!modal || !modalTitle || !modalText || !modalImage) return;
     const title = $('.service-name', card)?.textContent?.trim() || '';
-    const detail =
-      $('.service-detail', card)?.textContent?.trim() ||
-      $('.service-desc', card)?.textContent?.trim() ||
-      '';
+    const detail = $('.service-detail', card)?.textContent?.trim() || '';
     const img = $('img', card);
 
     modalTitle.textContent = title;

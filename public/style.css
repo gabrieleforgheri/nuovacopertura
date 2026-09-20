@@ -121,7 +121,6 @@
     --dark2: #f5f7fb;
     --dark3: #ebeff5;
     --gray: #556070;
-    --light: #F5F3EF;
     --white: #111827;
     --nav-bg: rgba(255,255,255,0.9);
     --nav-border: rgba(17,24,39,0.1);
@@ -610,40 +609,7 @@
   .about-point-text strong { display: block; font-size: 14px; font-weight: 600; margin-bottom: 2px; }
   .about-point-text span { font-size: 13px; color: var(--gray); }
 
-  /* ── CLIENTI ── */
-  #clienti { background: var(--dark2); text-align: center; }
-  #clienti .section-title, #clienti .section-tag { text-align: center; }
-  #clienti .section-sub { margin: 0 auto 60px; text-align: center; }
-  .clients-track-wrap { overflow: hidden; position: relative; }
-  .clients-track-wrap::before, .clients-track-wrap::after {
-    content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2;
-    pointer-events: none;
-  }
-  .clients-track-wrap::before { left: 0; background: linear-gradient(to right, var(--dark2), transparent); }
-  .clients-track-wrap::after { right: 0; background: linear-gradient(to left, var(--dark2), transparent); }
-  .clients-track {
-    display: flex; gap: 48px; align-items: center;
-    width: max-content;
-    animation: marquee 20s linear infinite;
-  }
-  .client-logo {
-    width: 110px; height: 60px;
-    background: var(--dark3);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.3);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; font-weight: 700; letter-spacing: 1px;
-    text-transform: uppercase;
-    flex-shrink: 0;
-    transition: border-color .2s, color .2s;
-  }
-  .client-logo:hover { border-color: var(--orange); color: var(--orange); }
-
-
   /* ── INSTAGRAM ── */
-  #instagram { background: var(--dark3); }
   .instagram-wrap {
     display: grid;
     grid-template-columns: 0.95fr 1.05fr;
@@ -731,155 +697,6 @@
     font-size: 16px;
     letter-spacing: .3px;
   }
-  .instagram-feed {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-
-  .instagram-embeds {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-  .ig-embed {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 2px;
-    overflow: hidden;
-    min-height: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-  }
-  .ig-embed blockquote.instagram-media {
-    margin: 0 !important;
-    width: 100%;
-  }
-  .ig-embed-fallback {
-    font-size: 12px;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.6;
-    text-align: center;
-  }
-  .ig-embed-fallback a { color: var(--orange-light); }
-  .ig-consent-btn {
-    margin-top: 10px;
-    padding: 10px 14px;
-    font-size: 12px;
-    letter-spacing: 1px;
-  }
-  .reel-card {
-    position: relative;
-    min-height: 230px;
-    overflow: hidden;
-    border-radius: 2px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background:
-      linear-gradient(180deg, rgba(13,13,13,0.12), rgba(13,13,13,0.92)),
-      radial-gradient(circle at top left, rgba(0,146,70,0.35), transparent 55%),
-      #151515;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    transition: transform .25s ease, border-color .25s ease;
-  }
-  .reel-card:hover { transform: translateY(-4px); border-color: rgba(206,43,55,0.45); }
-  .reel-chip {
-    position: absolute;
-    top: 14px; left: 14px;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.14);
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.86);
-  }
-  .reel-play {
-    position: absolute;
-    top: 14px; right: 14px;
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.14);
-    display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(8px);
-  }
-  .reel-card h3 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .reel-card p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.68);
-    line-height: 1.55;
-    max-width: 28ch;
-  }
-  .instagram-note {
-    margin-top: 16px;
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  .cookie-settings-btn {
-    border: 1px solid var(--panel-border);
-    background: transparent;
-    color: var(--white);
-    padding: 10px 14px;
-    border-radius: 2px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
-  .cookie-settings-btn:hover {
-    border-color: var(--orange);
-    color: var(--orange);
-  }
-
-  .cookie-banner {
-    position: fixed;
-    left: 16px;
-    right: 16px;
-    bottom: max(16px, env(safe-area-inset-bottom));
-    z-index: 120;
-    background: var(--dark3);
-    border: 1px solid var(--panel-border);
-    border-radius: 6px;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.2);
-    display: block;
-  }
-  
-  .cookie-banner-content {
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .cookie-banner-content p {
-    margin: 0;
-    max-width: 680px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-  .cookie-banner-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
   /* ── CONTATTI ── */
   #contatti {
     background: var(--dark);
@@ -982,8 +799,6 @@
 }
   :root[data-theme='light'] .about-point,
   :root[data-theme='light'] .instagram-panel,
-  :root[data-theme='light'] .ig-embed,
-  :root[data-theme='light'] .client-logo,
   :root[data-theme='light'] .contact-form input,
   :root[data-theme='light'] .contact-form select,
   :root[data-theme='light'] .contact-form textarea {
@@ -992,8 +807,6 @@
   :root[data-theme='light'] .contact-form input,
   :root[data-theme='light'] .contact-form select,
   :root[data-theme='light'] .contact-form textarea,
-  :root[data-theme='light'] .client-logo,
-  :root[data-theme='light'] .ig-embed-fallback,
   :root[data-theme='light'] .about-point-text span {
     color: #334155;
   }
@@ -1022,12 +835,6 @@
     0%,100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(8px); }
   }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  @keyframes countUp { from { opacity: 0; } to { opacity: 1; } }
-
   .reveal {
     opacity: 0; transform: translateY(28px);
     transition: opacity .7s ease, transform .7s ease;
@@ -1063,14 +870,10 @@
     .instagram-embed-head { align-items: flex-start; }
     .instagram-embed-head > div:last-child { width: 100%; justify-content: flex-start; }
     .instagram-embed-head > div:last-child .btn-ghost { width: 100%; text-align: center; }
-    .instagram-feed { grid-template-columns: 1fr; }
-    .instagram-embeds { grid-template-columns: 1fr; }
-    .ig-embed { min-height: 220px; }
     .instagram-stats { grid-template-columns: 1fr; }
     #contatti { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
     .form-row { grid-template-columns: 1fr; }
     footer { padding: 24px; flex-direction: column; text-align: center; }
-    .cookie-banner-content { flex-direction: column; align-items: flex-start; }
   }
 
 .logo-img-link { display: flex; align-items: center; gap: 14px; text-decoration: none; }
@@ -1249,9 +1052,7 @@ body.is-locked {
 
 /* ── SOCIAL ── */
 .btn-ghost-sm { padding: 10px 16px; font-size: 12px; }
-.instagram-embeds[data-state='empty'] { grid-template-columns: 1fr; }
 .ig-placeholder {
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1279,15 +1080,6 @@ body.is-locked {
   color: var(--white);
 }
 .ig-placeholder-text { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-.ig-consent {
-  margin-top: 14px;
-  padding: 14px;
-  border: 1px solid var(--panel-border);
-  border-radius: 4px;
-  font-size: 13px;
-  color: var(--text-muted);
-  text-align: center;
-}
 .instagram-profile > span { display: block; }
 
 /* ── CONTATTI: ogni riga è cliccabile ── */

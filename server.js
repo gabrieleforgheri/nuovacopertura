@@ -1,14 +1,9 @@
 import express from 'express';
-import compression from 'compression';
-import cors from 'cors';
-import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
-
-dotenv.config();
 
 /** Pelican/panel values may include wrapping quotes or stray spaces */
 function env(name, fallback = '') {
@@ -46,31 +41,14 @@ app.disable('x-powered-by');
 const TRUST_PROXY = Number(env('TRUST_PROXY', '1'));
 app.set('trust proxy', Number.isFinite(TRUST_PROXY) ? TRUST_PROXY : 1);
 
-app.use(compression());
 app.use(express.json({ limit: '64kb' }));
 
-/**
- * CORS: the front-end is served from this same origin, so cross-origin calls to
- * /api/contact are never needed by us. Leaving it open turns the endpoint into a
- * mail relay for any website. Allow only our own origins.
- */
+/** Origins allowed to POST /api/contact (see originGuard). */
 const allowedOrigins = new Set(
   env('ALLOWED_ORIGINS', [SITE_URL, SITE_URL.replace('://www.', '://')].join(','))
     .split(',')
     .map((o) => o.trim().replace(/\/+$/, ''))
     .filter(Boolean)
-);
-app.use(
-  cors({
-    origin(origin, cb) {
-      // same-origin / curl / server-to-server requests send no Origin header
-      if (!origin) return cb(null, true);
-      if (!IS_PROD || allowedOrigins.has(origin.replace(/\/+$/, ''))) return cb(null, true);
-      return cb(null, false);
-    },
-    methods: ['GET', 'POST'],
-    maxAge: 86400
-  })
 );
 
 /**
@@ -104,13 +82,11 @@ const CSP = [
   "form-action 'self'",
   "frame-ancestors 'self'",
   "object-src 'none'",
-  // Instagram embeds are loaded only after cookie consent
-  `script-src 'self' ${scriptHashes.join(' ')} https://www.instagram.com https://platform.instagram.com`,
+  `script-src 'self' ${scriptHashes.join(' ')}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://*.cdninstagram.com https://*.fbcdn.net",
+  "img-src 'self' data:",
   "font-src 'self'",
-  "connect-src 'self' https://graph.instagram.com",
-  "frame-src https://www.instagram.com",
+  "connect-src 'self'",
   'upgrade-insecure-requests'
 ].join('; ');
 
@@ -373,11 +349,6 @@ function rateLimit(req, res, next) {
   return next();
 }
 
-/** Counted only when a message is actually accepted for delivery. */
-function countGlobalSend() {
-  globalCount += 1;
-}
-
 // ── contact endpoint ──────────────────────────────────────────────────────────
 
 /**
@@ -480,7 +451,7 @@ app.post('/api/contact', originGuard, rateLimit, async (req, res) => {
       subject: `Richiesta preventivo — ${servizio}`,
       text
     });
-    countGlobalSend();
+    globalCount += 1; // only counted once delivery is accepted
     console.log('[contact] email sent', info?.messageId || '');
     return res.json({ ok: true });
   } catch (e) {

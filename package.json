@@ -4,17 +4,15 @@
   "version": "0.1.0",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_ENV=development node --watch server.js",
-    "check": "node --check server.js && node --check public/script.js"
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "NODE_ENV=development node --env-file-if-exists=.env --watch server.js",
+    "check": "node --check server.js && node --check public/script.js",
+    "test": "node test.js"
   },
   "dependencies": {
-    "compression": "^1.8.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "nodemailer": "^9.0.5"
   },

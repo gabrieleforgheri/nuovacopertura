@@ -105,6 +105,8 @@ poi **Reinstall** (esegue solo `npm install`).
 
 ## Sviluppo locale
 
+Serve Node ≥ 22 (`--env-file-if-exists` legge `.env` senza dotenv).
+
 ```bash
 npm install
 cp .env.example .env      # e compila SMTP_*
@@ -120,9 +122,9 @@ npm run check             # controllo sintassi
   `div.service-detail` dentro la card: è indicizzabile da Google e alimenta il modale.
 - **Elenco del form** → il `<select id="servizio">` deve restare allineato all'array
   `SERVIZI` in `server.js`, che rifiuta valori fuori lista.
-- **Post Instagram** → incolla i permalink dei singoli reel/post nell'array
-  `IG_PERMALINKS` in cima a `public/script.js`. Il link al **profilo** non è
-  embeddabile. Gli embed partono solo dopo il consenso ai cookie.
+- **Social** → la sezione mostra un riquadro statico con il link al profilo
+  Instagram. Nessun contenuto di terze parti viene caricato, quindi non serve
+  banner cookie: reintrodurre gli embed significa reintrodurre anche il consenso.
 - **Foto** → sostituisci i file in `public/img/` mantenendo i nomi
   (`<servizio>-800.webp` e `<servizio>-1600.webp`).
 - **Script inline** → gli hash CSP sono calcolati all'avvio da `server.js`:

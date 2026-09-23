@@ -64,8 +64,6 @@
     const isDark = theme === 'dark';
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
     themeButtons.forEach((btn) => {
-      const icon = $('.theme-icon', btn);
-      if (icon) icon.textContent = isDark ? '☀️' : '🌙';
       const label = isDark ? 'Attiva tema chiaro' : 'Attiva tema scuro';
       btn.setAttribute('aria-pressed', String(isDark));
       btn.setAttribute('aria-label', label);
@@ -247,24 +245,6 @@
     prefersReducedMotion.addEventListener('change', (e) => (e.matches ? stop() : start()));
   }
 
-  // ── scroll reveal ───────────────────────────────────────────────────────────
-  const reveals = $$('.reveal');
-  if (prefersReducedMotion.matches) {
-    reveals.forEach((el) => el.classList.add('visible'));
-  } else {
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry, i) => {
-          if (!entry.isIntersecting) return;
-          window.setTimeout(() => entry.target.classList.add('visible'), i * 80);
-          revealObserver.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.12 }
-    );
-    reveals.forEach((el) => revealObserver.observe(el));
-  }
-
   // ── cookie consent + social embeds ──────────────────────────────────────────
   // Instagram/Facebook iframes let Meta set profiling cookies, so nothing is
   // requested from Meta until the visitor accepts, from the banner or from the
@@ -275,6 +255,12 @@
   const loadEmbeds = () => {
     if (embedsLoaded) return;
     embedsLoaded = true;
+    // One consent gate stands in for both embeds; the grid needs layout before sizing the iframes.
+    const gate = $('.social-gate');
+    if (gate) {
+      gate.hidden = true;
+      $('.social-grid').hidden = false;
+    }
     $$('.social-embed').forEach((box) => {
       const frame = document.createElement('iframe');
       // The Facebook plugin renders at a fixed pixel width (180–500).
@@ -321,38 +307,6 @@
     banner.hidden = false;
     $('[data-consent="1"]', banner).focus();
   });
-
-  // ── count-up numbers ────────────────────────────────────────────────────────
-  const formatNum = (n) => Math.floor(n).toLocaleString('it-IT');
-
-  const countUp = (el, target, duration = 1600) => {
-    const start = performance.now();
-    const tick = (now) => {
-      const p = Math.min(1, (now - start) / duration);
-      // ease-out so the number settles instead of stopping dead
-      el.textContent = formatNum(target * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) requestAnimationFrame(tick);
-      else el.textContent = formatNum(target);
-    };
-    requestAnimationFrame(tick);
-  };
-
-  const strip = $('.numbers-strip');
-  if (strip && !prefersReducedMotion.matches) {
-    const numObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          $$('[data-target]', entry.target).forEach((n) =>
-            countUp(n, parseInt(n.dataset.target, 10) || 0)
-          );
-          numObserver.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.4 }
-    );
-    numObserver.observe(strip);
-  }
 
   // ── footer year ─────────────────────────────────────────────────────────────
   const yearEl = $('#footerYear');

@@ -23,9 +23,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-const SITE_URL = env('SITE_URL', 'https://www.nuovacopertura.it').replace(/\/+$/, '');
-const IS_PROD = env('NODE_ENV', 'production') === 'production';
-
 const app = express();
 app.disable('x-powered-by');
 
@@ -42,14 +39,6 @@ const TRUST_PROXY = Number(env('TRUST_PROXY', '1'));
 app.set('trust proxy', Number.isFinite(TRUST_PROXY) ? TRUST_PROXY : 1);
 
 app.use(express.json({ limit: '64kb' }));
-
-/** Origins allowed to POST /api/contact (see originGuard). */
-const allowedOrigins = new Set(
-  env('ALLOWED_ORIGINS', [SITE_URL, SITE_URL.replace('://www.', '://')].join(','))
-    .split(',')
-    .map((o) => o.trim().replace(/\/+$/, ''))
-    .filter(Boolean)
-);
 
 /**
  * The pages carry two kinds of inline <script>: the anti-FOUC theme switch and
@@ -133,45 +122,8 @@ app.use(
   })
 );
 
-app.get('/robots.txt', (_req, res) => {
-  res.type('text/plain').send(`User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
-});
-
-app.get('/sitemap.xml', (_req, res) => {
-  const today = new Date().toISOString().slice(0, 10);
-  const urls = [
-    { loc: `${SITE_URL}/`, priority: '1.0', freq: 'monthly' },
-    { loc: `${SITE_URL}/privacy`, priority: '0.3', freq: 'yearly' }
-  ];
-  res.type('application/xml').send(
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-      urls
-        .map(
-          (u) =>
-            `  <url><loc>${u.loc}</loc><lastmod>${today}</lastmod>` +
-            `<changefreq>${u.freq}</changefreq><priority>${u.priority}</priority></url>`
-        )
-        .join('\n') +
-      `\n</urlset>\n`
-  );
-});
-
-/**
- * Health/diagnostics. In production it exposes only a liveness flag unless a
- * HEALTH_TOKEN is supplied — the detailed payload leaks the destination address
- * and the SMTP host/user otherwise.
- */
-app.get('/api/health', async (req, res) => {
-  const token = env('HEALTH_TOKEN');
-  const supplied =
-    req.get('x-health-token') || (typeof req.query.token === 'string' ? req.query.token : '');
-  const detailed = !IS_PROD || (token && supplied === token);
-
-  if (!detailed) return res.json({ ok: true });
-
-  const smtp = await verifySmtp();
-  res.json({ ok: true, siteUrl: SITE_URL, contactTo: env('CONTACT_TO') || null, smtp });
-});
+/** Liveness probe for the panel/proxy; SMTP status goes to the boot log instead. */
+app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
 // ── validation ────────────────────────────────────────────────────────────────
 
@@ -223,11 +175,8 @@ function normalizePhone(value) {
 let cachedTransporter = null;
 
 function buildMailFrom() {
-  const explicit = env('SMTP_FROM');
-  if (explicit) return explicit;
   const user = env('SMTP_USER');
-  if (!user) return null;
-  return `${env('SMTP_FROM_NAME', 'Preventivo')} <${user}>`;
+  return env('SMTP_FROM') || (user ? `Preventivo <${user}>` : null);
 }
 
 function smtpConfigSummary() {
@@ -276,34 +225,22 @@ function getTransporter() {
   return cachedTransporter;
 }
 
-async function verifySmtp() {
+/** Boot-time SMTP check: the log says whether the form can send, and why not. */
+async function logSmtpStatus() {
   const transporter = getTransporter();
-  if (!transporter) return { ok: false, error: 'missing_config', summary: smtpConfigSummary() };
+  if (!transporter) {
+    console.warn('[smtp] not configured:', smtpConfigSummary());
+    console.warn('[smtp] in Pelican: Server → Variables → SMTP_HOST, SMTP_USER, SMTP_PASS, CONTACT_TO');
+    return;
+  }
   try {
     await transporter.verify();
-    return { ok: true, from: buildMailFrom(), summary: smtpConfigSummary() };
+    console.log('[smtp] ready —', buildMailFrom());
   } catch (e) {
     cachedTransporter?.close?.();
     cachedTransporter = null;
-    return {
-      ok: false,
-      error: e?.message || String(e),
-      code: e?.code || null,
-      summary: smtpConfigSummary()
-    };
-  }
-}
-
-async function logSmtpStatus() {
-  const result = await verifySmtp();
-  if (result.ok) return console.log('[smtp] ready —', result.from);
-
-  if (result.error === 'missing_config') {
-    console.warn('[smtp] not configured:', result.summary);
-    console.warn('[smtp] in Pelican: Server → Variables → SMTP_HOST, SMTP_USER, SMTP_PASS, CONTACT_TO');
-  } else {
-    console.error('[smtp] verify failed:', result.error, result.code ? `(${result.code})` : '');
-    console.error('[smtp] config:', result.summary);
+    console.error('[smtp] verify failed:', e?.message || e, e?.code ? `(${e.code})` : '');
+    console.error('[smtp] config:', smtpConfigSummary());
   }
 }
 
@@ -370,10 +307,9 @@ function rateLimit(req, res, next) {
  * sent — the browser only blocks the *response* from being read, which an abuser
  * does not care about. This rejects the request outright instead.
  *
- * A request whose Origin matches the Host it was sent to is same-origin and is
- * always allowed, so a wrong SITE_URL can never lock the real site out of its
- * own form. Requests without an Origin (curl, server-to-server) can't be
- * classified this way and are left to the rate limiter.
+ * The form posts from its own page, so only an Origin matching the Host it was
+ * sent to is allowed. Requests without an Origin (curl, server-to-server) can't
+ * be classified this way and are left to the rate limiter.
  */
 function originGuard(req, res, next) {
   const origin = req.get('origin');
@@ -387,8 +323,6 @@ function originGuard(req, res, next) {
   }
 
   if (host === req.get('host')) return next();
-  if (allowedOrigins.has(origin.replace(/\/+$/, ''))) return next();
-  if (!IS_PROD) return next();
 
   console.warn('[contact] blocked cross-origin request from', origin);
   return res.status(403).json({ ok: false, error: 'forbidden_origin' });
@@ -491,7 +425,6 @@ const host = process.env.HOST || '0.0.0.0';
 
 const server = app.listen(port, host, () => {
   console.log(`[Nuova Copertura] Listening on ${host}:${port}`);
-  console.log(`[site] ${SITE_URL}`);
   void logSmtpStatus();
 });
 

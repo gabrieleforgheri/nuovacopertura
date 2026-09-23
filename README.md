@@ -11,7 +11,7 @@ public/          # tutto ciò che è pubblico sul web
   style.css  script.js
   img/           # foto in WebP (2 risoluzioni ciascuna)
   fonts/         # Barlow / Bebas Neue self-hosted (nessuna richiesta a Google)
-server.js        # Express: statici, /api/contact, /api/health, robots, sitemap
+server.js        # Express: statici, /api/contact, /api/health
 pelican/         # egg per Pelican Panel
 ```
 
@@ -27,21 +27,17 @@ Copia `.env.example` in `.env` (in locale) oppure imposta le variabili in
 
 | Variabile | Obbl. | Default | Note |
 |-----------|:-----:|---------|------|
-| `SITE_URL` | Sì | `https://www.nuovacopertura.it` | Usata per canonical, `robots.txt`, `sitemap.xml` e origini CORS |
 | `CONTACT_TO` | Sì | `info@nuovacopertura.it` | Casella che riceve i lead |
 | `SMTP_HOST` | Sì | `smtp.zoho.eu` | |
 | `SMTP_PORT` | No | `587` | `465` per SMTPS |
 | `SMTP_SECURE` | No | auto | `true` su porta 465 |
 | `SMTP_USER` | Sì | — | Email completa |
 | `SMTP_PASS` | Sì | — | Con 2FA serve una **password per app** |
-| `SMTP_FROM_NAME` | No | `Preventivo` | |
 | `SMTP_FROM` | No | — | Es. `Preventivo <info@nuovacopertura.it>` |
-| `NODE_ENV` | No | `production` | `production` = CORS ristretto + health minimale |
+| `NODE_ENV` | No | `production` | Modalità di Express |
 | `TRUST_PROXY` | No | `1` (egg: `2`) | **Vedi sotto** |
-| `ALLOWED_ORIGINS` | No | da `SITE_URL` | Chi può chiamare `/api/contact` |
 | `RATE_MAX` | No | `5` | Invii per IP al minuto |
 | `RATE_GLOBAL_MAX` | No | `60` | Tetto complessivo orario |
-| `HEALTH_TOKEN` | No | — | Sblocca la diagnostica SMTP |
 | `SMTP_DEBUG` | No | — | `1` = log verboso della sessione SMTP |
 
 ### ⚠️ `TRUST_PROXY` — leggere prima di andare in produzione
@@ -72,12 +68,8 @@ aggirabile. Il tetto orario globale (`RATE_GLOBAL_MAX`) resta attivo in ogni cas
 All'avvio nei log compare `[smtp] ready — <mittente>` oppure `[smtp] verify failed`
 con il motivo.
 
-In produzione `/api/health` restituisce solo `{"ok":true}`: il dettaglio esporrebbe
-l'indirizzo di destinazione e i parametri SMTP. Per il payload completo:
-
-```bash
-curl -H "x-health-token: $HEALTH_TOKEN" https://<dominio>/api/health
-```
+`/api/health` restituisce solo `{"ok":true}` (controllo di vita): lo stato SMTP è
+solo nei log, così l'indirizzo di destinazione e i parametri non escono mai.
 
 **Zoho Mail:** `smtp.zoho.eu`, porta `465`, `SMTP_SECURE=true`, utente = email completa.
 Con la 2FA attiva serve una **password per app** (Zoho → Sicurezza → Password
@@ -90,7 +82,7 @@ applicazioni), non la password di login.
 1. **Admin → Nests → Eggs → Import Egg** → carica [`pelican/egg-nuovacopertura.json`](pelican/egg-nuovacopertura.json)
 2. **Servers → Create Server**, egg **Nuova Copertura (Node.js)**, immagine **Nodejs 24**
 3. Alloca almeno una porta: Pelican passa `SERVER_PORT` e l'app ascolta su `0.0.0.0`
-4. Compila le variabili (almeno `CONTACT_TO`, `SMTP_*`, `SITE_URL`) e fai **Restart**
+4. Compila le variabili (almeno `CONTACT_TO` e `SMTP_*`) e fai **Restart**
 
 **Deploy da Git:** imposta `GIT_ADDRESS`, `BRANCH=main`, `USER_UPLOAD=0`, poi **Reinstall**.
 
@@ -132,5 +124,7 @@ npm run check             # controllo sintassi
   `frame-src` in `server.js` e all'informativa.
 - **Foto** → sostituisci i file in `public/img/` mantenendo i nomi
   (`<servizio>-800.webp` e `<servizio>-1600.webp`).
+- **Dominio** → `robots.txt`, `sitemap.xml`, canonical e dati strutturati in `public/`
+  contengono `https://www.nuovacopertura.it`: se cambia il dominio, cercalo e sostituiscilo.
 - **Script inline** → gli hash CSP sono calcolati all'avvio da `server.js`:
   se modifichi lo script inline nell'`<head>` non devi aggiornare nulla a mano.

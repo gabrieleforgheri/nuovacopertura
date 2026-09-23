@@ -16,7 +16,7 @@ const PORT = await new Promise((resolve) => {
 const BASE = `http://127.0.0.1:${PORT}`;
 
 const server = spawn(process.execPath, ['server.js'], {
-  env: { ...process.env, PORT: String(PORT), SERVER_PORT: '', NODE_ENV: 'production', SITE_URL: 'https://www.example.test' },
+  env: { ...process.env, PORT: String(PORT), SERVER_PORT: '', },
   stdio: ['ignore', 'ignore', 'inherit']
 });
 

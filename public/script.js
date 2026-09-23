@@ -21,12 +21,6 @@
   const navToggle = $('.nav-toggle');
   const mobileNav = $('#mobileNav');
 
-  const syncNavHeight = () => {
-    if (!nav) return;
-    const h = Math.max(72, Math.min(110, Math.ceil(nav.getBoundingClientRect().height)));
-    document.documentElement.style.setProperty('--mobile-nav-top', `${h}px`);
-  };
-
   let mobileOpen = false;
   const setMobileOpen = (open) => {
     if (!navToggle || !mobileNav || open === mobileOpen) return;
@@ -38,24 +32,18 @@
     navToggle.setAttribute('aria-label', open ? 'Chiudi menu' : 'Apri menu');
     if (open) lockScroll();
     else unlockScroll();
-    syncNavHeight();
   };
 
   if (navToggle && mobileNav) {
-    syncNavHeight();
     navToggle.addEventListener('click', () => setMobileOpen(!mobileOpen));
     $$('a', mobileNav).forEach((a) => a.addEventListener('click', () => setMobileOpen(false)));
     window.addEventListener('resize', () => {
-      syncNavHeight();
       if (window.innerWidth > 900) setMobileOpen(false);
     });
   }
 
   if (nav) {
-    const onScroll = () => {
-      nav.classList.toggle('nav-scrolled', window.scrollY > 8);
-      syncNavHeight();
-    };
+    const onScroll = () => nav.classList.toggle('nav-scrolled', window.scrollY > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
@@ -267,7 +255,7 @@
 
   // ── scroll reveal ───────────────────────────────────────────────────────────
   const reveals = $$('.reveal');
-  if (prefersReducedMotion.matches || !('IntersectionObserver' in window)) {
+  if (prefersReducedMotion.matches) {
     reveals.forEach((el) => el.classList.add('visible'));
   } else {
     const revealObserver = new IntersectionObserver(
@@ -366,7 +354,7 @@
   };
 
   const strip = $('.numbers-strip');
-  if (strip && !prefersReducedMotion.matches && 'IntersectionObserver' in window) {
+  if (strip && !prefersReducedMotion.matches) {
     const numObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -394,6 +382,8 @@
     const successEl = $('#formSuccess');
     const originalBtnText = btn ? btn.textContent : 'Invia Richiesta →';
 
+    const unavailable =
+      'Servizio email non disponibile al momento. Chiamaci al 388 784 1511 o scrivi a info@nuovacopertura.it.';
     const messages = {
       missing_fields: 'Compila tutti i campi obbligatori.',
       invalid_email: 'L’indirizzo email non sembra valido.',
@@ -402,12 +392,9 @@
       privacy_required: 'Per inviare la richiesta devi accettare l’informativa privacy.',
       rate_limited: 'Troppe richieste in poco tempo. Attendi un minuto e riprova.',
       forbidden_origin: 'Richiesta non autorizzata. Ricarica la pagina e riprova.',
-      smtp_not_configured:
-        'Servizio email non disponibile al momento. Chiamaci al 388 784 1511 o scrivi a info@nuovacopertura.it.',
-      contact_not_configured:
-        'Servizio email non disponibile al momento. Chiamaci al 388 784 1511 o scrivi a info@nuovacopertura.it.',
-      sender_not_configured:
-        'Servizio email non disponibile al momento. Chiamaci al 388 784 1511 o scrivi a info@nuovacopertura.it.',
+      smtp_not_configured: unavailable,
+      contact_not_configured: unavailable,
+      sender_not_configured: unavailable,
       delivery_failed: 'Invio non riuscito. Riprova tra poco oppure chiamaci al 388 784 1511.',
       network: 'Connessione non riuscita. Controlla la rete e riprova.'
     };

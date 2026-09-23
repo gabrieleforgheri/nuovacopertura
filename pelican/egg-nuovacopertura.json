@@ -112,21 +112,8 @@
       "sort": 5
     },
     {
-      "name": "Site URL",
-      "description": "Dominio pubblico del sito (senza slash finale). Usato per canonical, robots.txt, sitemap.xml e per le origini CORS consentite.",
-      "env_variable": "SITE_URL",
-      "default_value": "https://www.nuovacopertura.it",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": [
-        "required",
-        "string"
-      ],
-      "sort": 6
-    },
-    {
       "name": "Node environment",
-      "description": "production abilita CORS ristretto e /api/health minimale. Usa development solo per debug.",
+      "description": "Modalità di Express. Lascia production.",
       "env_variable": "NODE_ENV",
       "default_value": "production",
       "user_viewable": true,
@@ -136,19 +123,6 @@
         "string"
       ],
       "sort": 7
-    },
-    {
-      "name": "Allowed origins",
-      "description": "Origini autorizzate a chiamare /api/contact, separate da virgola. Vuoto = derivate da SITE_URL.",
-      "env_variable": "ALLOWED_ORIGINS",
-      "default_value": "",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": [
-        "nullable",
-        "string"
-      ],
-      "sort": 8
     },
     {
       "name": "Rate limit",
@@ -256,21 +230,8 @@
       "sort": 15
     },
     {
-      "name": "SMTP From name",
-      "description": "Nome visualizzato del mittente (se SMTP_FROM è vuoto).",
-      "env_variable": "SMTP_FROM_NAME",
-      "default_value": "Preventivo",
-      "user_viewable": true,
-      "user_editable": true,
-      "rules": [
-        "nullable",
-        "string"
-      ],
-      "sort": 16
-    },
-    {
       "name": "SMTP From",
-      "description": "Mittente completo (es. \"Preventivo <info@yrb4g.com>\"). Lascia vuoto per usare SMTP_FROM_NAME + SMTP_USER.",
+      "description": "Mittente completo (es. \"Preventivo <info@yrb4g.com>\"). Lascia vuoto per usare \"Preventivo <SMTP_USER>\".",
       "env_variable": "SMTP_FROM",
       "default_value": "Preventivo <info@nuovacopertura.it>",
       "user_viewable": true,
@@ -280,19 +241,6 @@
         "string"
       ],
       "sort": 17
-    },
-    {
-      "name": "Health token",
-      "description": "Token per la diagnostica SMTP: curl -H \"x-health-token: TOKEN\" https://<dominio>/api/health. Senza token /api/health mostra solo {\"ok\":true}.",
-      "env_variable": "HEALTH_TOKEN",
-      "default_value": "",
-      "user_viewable": false,
-      "user_editable": true,
-      "rules": [
-        "nullable",
-        "string"
-      ],
-      "sort": 18
     }
   ]
 }

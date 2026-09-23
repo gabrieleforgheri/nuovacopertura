@@ -182,8 +182,10 @@
       { prep: 'NELLE', text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', flip: true },
       { prep: 'NEL', text: 'FOTOVOLTAICO', img: 'fotovoltaico' },
       { prep: 'NELLE', text: 'MANUTENZIONI', img: 'manutenzione' },
-      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO', img: 'amianto', pos: 'left', flip: true }
+      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO', short: 'SMALTIMENTO', img: 'amianto', pos: 'left', flip: true }
     ];
+    // Phones get the short form so the green line keeps the headline's size (see .hero-title).
+    const label = (item) => (window.innerWidth <= 900 && item.short) || item.text;
 
     // The background follows the green word, reusing the service photos.
     // Absolute URL: a relative url() inside a custom property resolves differently per browser.
@@ -213,13 +215,13 @@
     const rotate = () => {
       if (!currentEl || !nextEl || heroSlot.classList.contains('is-spinning')) return;
       idx = (idx + 1) % items.length;
-      nextEl.textContent = items[idx].text;
+      nextEl.textContent = label(items[idx]);
       if (heroPrep) heroPrep.textContent = items[idx].prep;
       showPhoto(items[idx]);
       preload(items[(idx + 1) % items.length]);
       heroSlot.classList.add('is-spinning');
       window.setTimeout(() => {
-        currentEl.textContent = items[idx].text;
+        currentEl.textContent = label(items[idx]);
         nextEl.textContent = '';
         heroSlot.classList.remove('is-spinning');
       }, 480);
@@ -235,7 +237,7 @@
       }
     };
 
-    if (currentEl) currentEl.textContent = items[0].text;
+    if (currentEl) currentEl.textContent = label(items[0]);
     if (heroPrep) heroPrep.textContent = items[0].prep;
     preload(items[1]);
     start();

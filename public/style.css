@@ -373,7 +373,10 @@
   }
   .hero-title {
     font-family: 'Bebas Neue', cursive;
-    font-size: clamp(56px, 8vw, 110px);
+    /* The whole headline shrinks with the column so the longest green word fits
+       at the same size as the white lines: "SMALTIMENTO AMIANTO" is 7.1em plus
+       2px of letter-spacing per character (19 chars = 38px). */
+    font-size: min(clamp(56px, 8vw, 110px), calc((100cqi - 38px) / 7.2));
     line-height: 0.95;
     letter-spacing: 2px;
     margin-bottom: 28px;
@@ -381,8 +384,6 @@
   .slot-machine {
     position: relative;
     display: block;
-    /* "SMALTIMENTO AMIANTO" is ~8em wide: shrink long words to the text column instead of clipping */
-    font-size: min(1em, calc((100cqi - 40px) / 7.5)); /* 40px = 2px letter-spacing × 19 chars */
     height: 1em;
     overflow: hidden;
     vertical-align: baseline;
@@ -834,7 +835,7 @@
     .nav-actions { gap: 8px; }
     .theme-toggle { display: none; }
     .theme-toggle-mobile { display: inline-flex; }
-    .mobile-nav { padding-top: 78px; }
+    .mobile-nav { padding-top: 124px; } /* below the fixed nav: 70px logo + 36px padding */
     section { padding: 70px 24px; }
     .hero-content { padding: 0 24px; }
     .hero-content::before { inset: -24px -24px -24px -12px; }
@@ -1263,6 +1264,9 @@ a.contact-detail:hover .contact-icon { background: rgba(0,146,70,0.28); }
   .logo-img { height: 70px; }
   body > nav.nav-scrolled .logo-img { height: 56px; }
   #hero { padding-top: 130px; }
+  /* Phones show "SMALTIMENTO" alone (script.js), so the longest word is
+     "SCALE MARINARE": 5.15em + 14 chars × 2px. */
+  .hero-title { font-size: min(clamp(56px, 8vw, 110px), calc((100cqi - 28px) / 5.2)); }
   /* No room beside the text on phones: full-bleed photo, the text panel keeps it legible. */
   .hero-photos {
     width: 100%;

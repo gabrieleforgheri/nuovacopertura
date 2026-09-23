@@ -308,6 +308,39 @@
     $('[data-consent="1"]', banner).focus();
   });
 
+  // ── count-up numbers ────────────────────────────────────────────────────────
+  // The target is the number already in the markup, so it lives in one place.
+  const formatNum = (n) => Math.floor(n).toLocaleString('it-IT');
+
+  const countUp = (el, target, duration = 1600) => {
+    const start = performance.now();
+    const tick = (now) => {
+      const p = Math.min(1, (now - start) / duration);
+      // ease-out so the number settles instead of stopping dead
+      el.textContent = formatNum(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = formatNum(target);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const strip = $('.numbers-strip');
+  if (strip && !prefersReducedMotion.matches) {
+    const numObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          $$('.num-val', entry.target).forEach((n) =>
+            countUp(n, parseInt(n.textContent.replace(/\D/g, ''), 10) || 0)
+          );
+          numObserver.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.4 }
+    );
+    numObserver.observe(strip);
+  }
+
   // ── footer year ─────────────────────────────────────────────────────────────
   const yearEl = $('#footerYear');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());

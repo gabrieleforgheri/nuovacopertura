@@ -303,20 +303,22 @@
   /* ── HERO ── */
   #hero {
     position: relative;
-    height: 100vh; min-height: 700px;
+    min-height: 100vh; min-height: 100svh;
+    padding-top: 150px; padding-bottom: 130px; /* clear the fixed nav above and the scroll hint below */
     display: flex; align-items: center;
     overflow: hidden;
   }
   .hero-bg {
     position: absolute; inset: 0;
+    transition: background-image .6s ease;
     background:
       linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(0,146,70,0.18) 100%),
-      url('img/hero-1920.webp') center/cover no-repeat;
+      var(--hero-img, url('img/hero-1920.webp')) center/cover no-repeat;
   }
   :root[data-theme='light'] .hero-bg {
     background:
       linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 52%, rgba(0,146,70,0.14) 76%, rgba(206,43,55,0.14) 100%),
-      url('img/hero-1920.webp') center/cover no-repeat;
+      var(--hero-img, url('img/hero-1920.webp')) center/cover no-repeat;
   }
   /* animated diagonal stripes */
   .hero-bg::after {
@@ -331,7 +333,9 @@
   .hero-content {
     position: relative; z-index: 2;
     padding: 0 60px;
-    max-width: 800px;
+    width: 100%;
+    max-width: 960px;
+    container-type: inline-size;
     animation: fadeUp .9s ease both;
   }
   .hero-content::before {
@@ -366,8 +370,9 @@
   .hero-title em { color: var(--orange); font-style: normal; }
   .slot-machine {
     position: relative;
-    display: inline-block;
-    min-width: 24ch;
+    display: block;
+    /* "SMALTIMENTO AMIANTO" is ~8em wide: shrink long words to the text column instead of clipping */
+    font-size: min(1em, calc((100cqi - 40px) / 7.5)); /* 40px = 2px letter-spacing × 19 chars */
     height: 1em;
     overflow: hidden;
     vertical-align: baseline;
@@ -821,14 +826,9 @@
     .theme-toggle { display: none; }
     .theme-toggle-mobile { display: inline-flex; }
     .mobile-nav { padding-top: 78px; }
-    .logo-wordmark { font-size: 20px; letter-spacing: 1px; }
-    body > nav.nav-scrolled .logo-wordmark { font-size: 18px; }
-    .logo-img { height: 70px; }
-    body > nav.nav-scrolled .logo-img { height: 56px; }
     section { padding: 70px 24px; }
     .hero-content { padding: 0 24px; }
     .hero-content::before { inset: -24px -24px -24px -12px; }
-    .slot-machine { min-width: 17ch; }
     .numbers-strip { padding: 24px; grid-template-columns: repeat(2,1fr); gap: 1px; }
     .servizi-grid { grid-template-columns: 1fr; }
     #chi-siamo { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
@@ -1251,14 +1251,20 @@ a.contact-detail:hover .contact-icon { background: rgba(0,146,70,0.28); }
 
 /* Su schermi piccoli basta la versione leggera dell'immagine hero (72 KB vs 128 KB) */
 @media (max-width: 900px) {
+  /* After the base .logo-* rules on purpose: earlier in the file they were overridden. */
+  .logo-wordmark { font-size: 20px; letter-spacing: 1px; }
+  body > nav.nav-scrolled .logo-wordmark { font-size: 18px; }
+  .logo-img { height: 70px; }
+  body > nav.nav-scrolled .logo-img { height: 56px; }
+  #hero { padding-top: 130px; }
   .hero-bg {
     background-image:
       linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(0,146,70,0.18) 100%),
-      url('img/hero-1200.webp');
+      var(--hero-img, url('img/hero-1200.webp'));
   }
   :root[data-theme='light'] .hero-bg {
     background-image:
       linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 52%, rgba(0,146,70,0.14) 76%, rgba(206,43,55,0.14) 100%),
-      url('img/hero-1200.webp');
+      var(--hero-img, url('img/hero-1200.webp'));
   }
 }

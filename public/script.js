@@ -193,14 +193,23 @@
     const currentEl = $('.slot-current', heroSlot);
     const nextEl = $('.slot-next', heroSlot);
     const items = [
-      { prep: 'NELLE', text: 'COPERTURE' },
-      { prep: 'NELLE', text: 'LINEE VITA' },
-      { prep: 'NEI', text: 'PARAPETTI' },
-      { prep: 'NELLE', text: 'SCALE MARINARE' },
-      { prep: 'NEL', text: 'FOTOVOLTAICO' },
-      { prep: 'NELLE', text: 'MANUTENZIONI' },
-      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO' }
+      { prep: 'NELLE', text: 'COPERTURE', img: null }, // null = default hero photo from the CSS
+      { prep: 'NELLE', text: 'LINEE VITA', img: 'linea-vita' },
+      { prep: 'NEI', text: 'PARAPETTI', img: 'parapetti' },
+      { prep: 'NELLE', text: 'SCALE MARINARE', img: 'scale-marinare' },
+      { prep: 'NEL', text: 'FOTOVOLTAICO', img: 'fotovoltaico' },
+      { prep: 'NELLE', text: 'MANUTENZIONI', img: 'manutenzione' },
+      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO', img: 'amianto' }
     ];
+
+    // The background follows the green word, reusing the service photos.
+    // Absolute URL: a relative url() inside a custom property resolves differently per browser.
+    const heroBg = $('.hero-bg');
+    const photo = (name) =>
+      new URL(`img/${name}-${window.innerWidth > 900 ? 1600 : 800}.webp`, document.baseURI).href;
+    const preload = (item) => {
+      if (item.img) new Image().src = photo(item.img);
+    };
 
     let idx = 0;
     let timer = null;
@@ -210,6 +219,9 @@
       idx = (idx + 1) % items.length;
       nextEl.textContent = items[idx].text;
       if (heroPrep) heroPrep.textContent = items[idx].prep;
+      if (items[idx].img) heroBg?.style.setProperty('--hero-img', `url('${photo(items[idx].img)}')`);
+      else heroBg?.style.removeProperty('--hero-img');
+      preload(items[(idx + 1) % items.length]);
       heroSlot.classList.add('is-spinning');
       window.setTimeout(() => {
         currentEl.textContent = items[idx].text;
@@ -230,6 +242,7 @@
 
     if (currentEl) currentEl.textContent = items[0].text;
     if (heroPrep) heroPrep.textContent = items[0].prep;
+    preload(items[1]);
     start();
 
     // Don't burn cycles (or battery) while the tab is in the background.

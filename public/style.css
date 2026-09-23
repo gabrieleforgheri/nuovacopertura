@@ -310,20 +310,40 @@
   }
   .hero-bg {
     position: absolute; inset: 0;
-    transition: background-image .6s ease;
-    background:
-      linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(0,146,70,0.18) 100%),
-      var(--hero-img, url('img/hero-1920.webp')) center/cover no-repeat;
+    background: var(--dark);
   }
-  :root[data-theme='light'] .hero-bg {
-    background:
-      linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 52%, rgba(0,146,70,0.14) 76%, rgba(206,43,55,0.14) 100%),
-      var(--hero-img, url('img/hero-1920.webp')) center/cover no-repeat;
+  /* The photo sits on the right and fades out towards the headline, so the
+     subject is never behind the text. script.js stacks a new layer per word
+     (--photo, --pos, --flip) and drops the old one once it has faded in. */
+  /* The fade lives on this wrapper, not on the layers: a flipped layer would mirror it. */
+  .hero-photos {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 64%;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 40%);
+    mask-image: linear-gradient(to right, transparent, #000 40%);
+  }
+  .hero-photo {
+    position: absolute; inset: 0;
+    background: var(--photo, url('img/hero-1920.webp')) var(--pos, center) / cover no-repeat;
+    opacity: 0;
+    transform: translateX(4%) scale(1.08) scaleX(var(--flip, 1));
+    transition: opacity 1.1s ease, transform 1.6s cubic-bezier(.2,.8,.2,1);
+  }
+  .hero-photo.is-in { opacity: 1; transform: translateX(0) scale(1) scaleX(var(--flip, 1)); }
+  .hero-photo--default { --flip: -1; } /* mirrored: the roofer faces the text */
+  /* tint over the photo, under the text */
+  .hero-bg::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(135deg, rgba(13,13,13,0.6) 0%, rgba(13,13,13,0.2) 60%, rgba(0,146,70,0.18) 100%);
+  }
+  :root[data-theme='light'] .hero-bg::before {
+    background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 52%, rgba(0,146,70,0.14) 76%, rgba(206,43,55,0.14) 100%);
   }
   /* animated diagonal stripes */
   .hero-bg::after {
     content: '';
-    position: absolute; inset: 0;
+    position: absolute; inset: 0; z-index: 1;
     background: repeating-linear-gradient(
       -55deg,
       transparent, transparent 80px,
@@ -1257,14 +1277,11 @@ a.contact-detail:hover .contact-icon { background: rgba(0,146,70,0.28); }
   .logo-img { height: 70px; }
   body > nav.nav-scrolled .logo-img { height: 56px; }
   #hero { padding-top: 130px; }
-  .hero-bg {
-    background-image:
-      linear-gradient(135deg, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.55) 60%, rgba(0,146,70,0.18) 100%),
-      var(--hero-img, url('img/hero-1200.webp'));
+  /* No room beside the text on phones: full-bleed photo, the text panel keeps it legible. */
+  .hero-photos {
+    width: 100%;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
-  :root[data-theme='light'] .hero-bg {
-    background-image:
-      linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.15) 52%, rgba(0,146,70,0.14) 76%, rgba(206,43,55,0.14) 100%),
-      var(--hero-img, url('img/hero-1200.webp'));
-  }
+  .hero-photo { background-image: var(--photo, url('img/hero-1200.webp')); }
 }

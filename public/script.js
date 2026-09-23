@@ -193,22 +193,38 @@
     const currentEl = $('.slot-current', heroSlot);
     const nextEl = $('.slot-next', heroSlot);
     const items = [
-      { prep: 'NELLE', text: 'COPERTURE', img: null }, // null = default hero photo from the CSS
+      // img: service photo (null = default hero photo from the CSS).
+      // pos/flip: framing that keeps the subject on the right, away from the text.
+      { prep: 'NELLE', text: 'COPERTURE', img: null, flip: true },
       { prep: 'NELLE', text: 'LINEE VITA', img: 'linea-vita' },
-      { prep: 'NEI', text: 'PARAPETTI', img: 'parapetti' },
-      { prep: 'NELLE', text: 'SCALE MARINARE', img: 'scale-marinare' },
+      { prep: 'NEI', text: 'PARAPETTI', img: 'parapetti', pos: 'right' },
+      { prep: 'NELLE', text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', flip: true },
       { prep: 'NEL', text: 'FOTOVOLTAICO', img: 'fotovoltaico' },
       { prep: 'NELLE', text: 'MANUTENZIONI', img: 'manutenzione' },
-      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO', img: 'amianto' }
+      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO', img: 'amianto', pos: 'left', flip: true }
     ];
 
     // The background follows the green word, reusing the service photos.
     // Absolute URL: a relative url() inside a custom property resolves differently per browser.
-    const heroBg = $('.hero-bg');
+    const heroBg = $('.hero-photos');
     const photo = (name) =>
       new URL(`img/${name}-${window.innerWidth > 900 ? 1600 : 800}.webp`, document.baseURI).href;
     const preload = (item) => {
       if (item.img) new Image().src = photo(item.img);
+    };
+    // New layer on top fades/zooms in over the old one, which is removed afterwards.
+    const showPhoto = (item) => {
+      if (!heroBg) return;
+      const old = $$('.hero-photo', heroBg);
+      const layer = document.createElement('div');
+      layer.className = 'hero-photo';
+      if (item.img) layer.style.setProperty('--photo', `url('${photo(item.img)}')`);
+      layer.style.setProperty('--pos', item.pos || 'center');
+      layer.style.setProperty('--flip', item.flip ? '-1' : '1');
+      heroBg.append(layer);
+      layer.getBoundingClientRect(); // commit the start state so the transition runs
+      layer.classList.add('is-in');
+      window.setTimeout(() => old.forEach((el) => el.remove()), 1700);
     };
 
     let idx = 0;
@@ -219,8 +235,7 @@
       idx = (idx + 1) % items.length;
       nextEl.textContent = items[idx].text;
       if (heroPrep) heroPrep.textContent = items[idx].prep;
-      if (items[idx].img) heroBg?.style.setProperty('--hero-img', `url('${photo(items[idx].img)}')`);
-      else heroBg?.style.removeProperty('--hero-img');
+      showPhoto(items[idx]);
       preload(items[(idx + 1) % items.length]);
       heroSlot.classList.add('is-spinning');
       window.setTimeout(() => {

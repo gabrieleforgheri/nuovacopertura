@@ -1060,6 +1060,8 @@ body.is-locked {
   border-radius: 4px;
   background: #fff;
 }
+/* Facebook Page plugin: fixed height, matches height=600 in its URL. */
+.social-embed iframe[src*="facebook.com"] { height: 600px; }
 .ig-placeholder-text a { color: var(--orange); }
 .footer-social { display: flex; gap: 10px; }
 

@@ -122,12 +122,13 @@ npm run check             # controllo sintassi
   `div.service-detail` dentro la card: è indicizzabile da Google e alimenta il modale.
 - **Elenco del form** → il `<select id="servizio">` deve restare allineato all'array
   `SERVIZI` in `server.js`, che rifiuta valori fuori lista.
-- **Social** → il profilo Instagram è incorporato (`.social-embed` in `index.html`),
-  ma l'iframe di Meta parte solo dopo il click su "Mostra i contenuti social"
-  (`script.js`, chiave `social-consent`). Non serve un banner cookie globale;
-  la revoca è nel footer. Facebook è una scheda con link: il plugin Pagina resta
-  vuoto per un URL `profile.php?id=`. Nuovi domini da incorporare vanno aggiunti
-  a `frame-src` in `server.js` e all'informativa.
+- **Social** → profilo Instagram e pagina Facebook sono incorporati (`.social-embed`
+  in `index.html`), ma gli iframe di Meta partono solo dopo il click su "Mostra i
+  contenuti social" (`script.js`, chiave `social-consent`): un click li carica
+  entrambi. Non serve un banner cookie globale; la revoca è nel footer. Il plugin
+  Pagina di Facebook resta bianco se l'URL non è una Pagina pubblica senza
+  restrizioni di età/paese. Nuovi domini da incorporare vanno aggiunti a
+  `frame-src` in `server.js` e all'informativa.
 - **Foto** → sostituisci i file in `public/img/` mantenendo i nomi
   (`<servizio>-800.webp` e `<servizio>-1600.webp`).
 - **Script inline** → gli hash CSP sono calcolati all'avvio da `server.js`:

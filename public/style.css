@@ -1060,6 +1060,31 @@ body.is-locked {
   border-radius: 4px;
   background: #fff;
 }
+.cookie-banner {
+  position: fixed;
+  left: 16px; right: 16px; bottom: 16px;
+  z-index: 300;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 22px;
+  background: var(--dark2);
+  border: 1px solid var(--panel-border);
+  border-radius: 4px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.cookie-banner[hidden] { display: none; }
+.cookie-banner strong { display: block; margin-bottom: 6px; color: var(--white); font-size: 15px; }
+.cookie-banner a { color: var(--orange); }
+.cookie-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.cookie-reject {
+  margin-right: auto;
+  background: none; border: 0; padding: 0;
+  font: inherit; font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
 /* Facebook Page plugin: fixed height, matches height=600 in its URL. */
 .social-embed iframe[src*="facebook.com"] { height: 600px; }
 .ig-placeholder-text a { color: var(--orange); }

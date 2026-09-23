@@ -124,8 +124,9 @@ npm run check             # controllo sintassi
   `SERVIZI` in `server.js`, che rifiuta valori fuori lista.
 - **Social** → profilo Instagram e pagina Facebook sono incorporati (`.social-embed`
   in `index.html`), ma gli iframe di Meta partono solo dopo il click su "Mostra i
-  contenuti social" (`script.js`, chiave `social-consent`): un click li carica
-  entrambi. Non serve un banner cookie globale; la revoca è nel footer. Il plugin
+  contenuti social" o su "Accetta tutti" nel banner cookie (`script.js`, chiave
+  `social-consent`: `1` accetta tutti, `0` solo necessari). "Preferenze cookie"
+  nel footer riapre il banner. Il plugin
   Pagina di Facebook resta bianco se l'URL non è una Pagina pubblica senza
   restrizioni di età/paese. Nuovi domini da incorporare vanno aggiunti a
   `frame-src` in `server.js` e all'informativa.

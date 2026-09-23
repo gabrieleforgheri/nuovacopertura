@@ -255,14 +255,16 @@
     reveals.forEach((el) => revealObserver.observe(el));
   }
 
-  // ── social embeds ───────────────────────────────────────────────────────────
+  // ── cookie consent + social embeds ──────────────────────────────────────────
   // Instagram/Facebook iframes let Meta set profiling cookies, so nothing is
-  // requested from Meta until the visitor clicks. The choice is remembered and
-  // can be withdrawn from the footer.
+  // requested from Meta until the visitor accepts, from the banner or from the
+  // placeholder in the social section. '1' = accetta tutti, '0' = solo necessari.
   const SOCIAL_KEY = 'social-consent';
-  const revokeButtons = $$('.social-revoke');
+  let embedsLoaded = false;
 
   const loadEmbeds = () => {
+    if (embedsLoaded) return;
+    embedsLoaded = true;
     $$('.social-embed').forEach((box) => {
       const frame = document.createElement('iframe');
       // The Facebook plugin renders at a fixed pixel width (180–500).
@@ -272,28 +274,51 @@
       frame.loading = 'lazy';
       box.replaceChildren(frame);
     });
-    revokeButtons.forEach((btn) => { btn.hidden = false; });
   };
 
-  try {
-    if (localStorage.getItem(SOCIAL_KEY) === '1') loadEmbeds();
-  } catch { /* storage blocked: ask again on every visit */ }
+  const banner = document.createElement('div');
+  banner.className = 'cookie-banner';
+  banner.setAttribute('role', 'dialog');
+  banner.setAttribute('aria-labelledby', 'cookieTitle');
+  banner.hidden = true;
+  banner.innerHTML = `
+    <p><strong id="cookieTitle">Cookie</strong> Usiamo solo cookie tecnici, necessari al funzionamento del sito.
+      Con “Accetta tutti” mostriamo anche i contenuti di Instagram e Facebook, che installano cookie di
+      profilazione di Meta. <a href="privacy#cookie">Informativa</a></p>
+    <div class="cookie-actions">
+      <button type="button" class="cookie-reject" data-consent="0">Non accetto</button>
+      <button type="button" class="btn-ghost btn-ghost-sm" data-consent="0">Solo necessari</button>
+      <button type="button" class="btn-primary btn-ghost-sm" data-consent="1">Accetta tutti</button>
+    </div>`;
+  document.body.append(banner);
 
-  $$('.social-consent').forEach((btn) =>
-    btn.addEventListener('click', () => {
-      try {
-        localStorage.setItem(SOCIAL_KEY, '1');
-      } catch { /* private mode: consent lasts this page view only */ }
-      loadEmbeds();
-    })
+  const setConsent = (value) => {
+    try {
+      localStorage.setItem(SOCIAL_KEY, value);
+    } catch { /* private mode: the choice lasts this page view only */ }
+    banner.hidden = true;
+    if (value === '1') loadEmbeds();
+    else if (embedsLoaded) location.reload(); // drop the Meta iframes already running
+  };
+
+  const storedConsent = (() => {
+    try {
+      return localStorage.getItem(SOCIAL_KEY);
+    } catch {
+      return null;
+    }
+  })();
+  if (storedConsent === '1') loadEmbeds();
+  else if (storedConsent === null) banner.hidden = false;
+
+  $$('[data-consent]', banner).forEach((btn) =>
+    btn.addEventListener('click', () => setConsent(btn.dataset.consent))
   );
-
-  revokeButtons.forEach((btn) =>
+  $$('.social-consent').forEach((btn) => btn.addEventListener('click', () => setConsent('1')));
+  $$('.cookie-prefs').forEach((btn) =>
     btn.addEventListener('click', () => {
-      try {
-        localStorage.removeItem(SOCIAL_KEY);
-      } catch { /* nothing stored */ }
-      location.reload();
+      banner.hidden = false;
+      $('[data-consent="1"]', banner).focus();
     })
   );
 

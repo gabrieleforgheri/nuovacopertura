@@ -79,7 +79,7 @@
     { "@type": "AdministrativeArea", "name": "Lombardia" },
     { "@type": "AdministrativeArea", "name": "Veneto" }
   ],
-  "sameAs": ["https://www.instagram.com/nuovacopertura/"],
+  "sameAs": ["https://www.instagram.com/nuovacopertura/", "https://www.facebook.com/profile.php?id=61575051581275"],
   "openingHoursSpecification": [{
     "@type": "OpeningHoursSpecification",
     "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
@@ -353,28 +353,32 @@
 </section>
 
 <!-- SOCIAL -->
+<!-- Meta sets profiling cookies: the embeds load only after an explicit click (script.js). -->
 <section id="social" aria-labelledby="socialTitle">
-  <div class="instagram-wrap">
-    <div class="instagram-copy reveal">
-      <p class="section-tag">Social &amp; Reels</p>
-      <h2 class="section-title" id="socialTitle">SEGUICI SUI SOCIAL</h2>
-      <p class="section-sub">Cantieri, lavorazioni, dettagli tecnici e risultati finali: sul nostro profilo raccontiamo il lavoro di ogni giorno, con foto e video dai tetti su cui interveniamo.</p>
-      <div class="instagram-cta-row">
-        <a class="btn-primary" href="https://www.instagram.com/nuovacopertura/" target="_blank" rel="noopener noreferrer">Apri Instagram</a>
-        <a class="btn-ghost" href="#contatti">Richiedi preventivo</a>
+  <div class="instagram-copy reveal">
+    <p class="section-tag">Social &amp; Reels</p>
+    <h2 class="section-title" id="socialTitle">SEGUICI SUI SOCIAL</h2>
+    <p class="section-sub">Cantieri, lavorazioni, dettagli tecnici e risultati finali: su Instagram e Facebook raccontiamo il lavoro di ogni giorno, con foto e video dai tetti su cui interveniamo.</p>
+  </div>
+
+  <div class="social-grid">
+    <div class="instagram-panel reveal">
+      <div class="instagram-embed-head">
+        <div class="instagram-profile">
+          <span class="instagram-avatar" aria-hidden="true">IG</span>
+          <span>
+            <small>Instagram</small>
+            <strong>@nuovacopertura</strong>
+          </span>
+        </div>
+        <a class="btn-ghost btn-ghost-sm" href="https://www.instagram.com/nuovacopertura/" target="_blank" rel="noopener noreferrer">Apri Instagram</a>
       </div>
-      <div class="instagram-stats">
-        <div class="instagram-stat">
-          <strong>Video &amp; Foto</strong>
-          <span>Format rapido</span>
-        </div>
-        <div class="instagram-stat">
-          <strong>Cantieri</strong>
-          <span>Lavori e interventi</span>
-        </div>
-        <div class="instagram-stat">
-          <strong>Community</strong>
-          <span>Sempre aggiornati</span>
+      <div class="social-embed" data-src="https://www.instagram.com/nuovacopertura/embed/" data-title="Profilo Instagram di Nuova Copertura">
+        <div class="ig-placeholder">
+          <span class="ig-placeholder-icon" aria-hidden="true">▶</span>
+          <p class="ig-placeholder-title">I nostri ultimi lavori su Instagram</p>
+          <p class="ig-placeholder-text">Per mostrarli il sito carica contenuti di Meta, che può installare cookie di profilazione. <a href="privacy#cookie">Informativa</a></p>
+          <button type="button" class="btn-primary social-consent">Mostra i contenuti social</button>
         </div>
       </div>
     </div>
@@ -382,20 +386,20 @@
     <div class="instagram-panel reveal">
       <div class="instagram-embed-head">
         <div class="instagram-profile">
-          <span class="instagram-avatar" aria-hidden="true">IG</span>
+          <span class="instagram-avatar instagram-avatar--fb" aria-hidden="true">f</span>
           <span>
-            <small>Il nostro profilo</small>
-            <strong>@nuovacopertura</strong>
+            <small>Facebook</small>
+            <strong>Nuova Copertura</strong>
           </span>
         </div>
-        <a class="btn-ghost btn-ghost-sm" href="https://www.instagram.com/nuovacopertura/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a class="btn-ghost btn-ghost-sm" href="https://www.facebook.com/profile.php?id=61575051581275" target="_blank" rel="noopener noreferrer">Apri Facebook</a>
       </div>
-
+      <!-- ponytail: static card — the Page plugin renders blank for this profile.php id. Once it is a public Page, restore a .social-embed with data-src="https://www.facebook.com/plugins/page.php?href=…&amp;tabs=timeline&amp;width={w}&amp;height=600". -->
       <div class="ig-placeholder">
-        <span class="ig-placeholder-icon" aria-hidden="true">▶</span>
-        <p class="ig-placeholder-title">I nostri ultimi lavori sono su Instagram</p>
-        <p class="ig-placeholder-text">Foto e video dai cantieri, aggiornati di continuo.</p>
-        <a class="btn-primary" href="https://www.instagram.com/nuovacopertura/" target="_blank" rel="noopener noreferrer">Vai al profilo</a>
+        <span class="ig-placeholder-icon" aria-hidden="true">f</span>
+        <p class="ig-placeholder-title">Le novità dalla pagina Facebook</p>
+        <p class="ig-placeholder-text">Aggiornamenti dai cantieri, lavori conclusi e avvisi: seguici anche su Facebook.</p>
+        <a class="btn-primary" href="https://www.facebook.com/profile.php?id=61575051581275" target="_blank" rel="noopener noreferrer">Vai alla pagina</a>
       </div>
     </div>
   </div>
@@ -513,10 +517,16 @@
   </p>
   <nav class="footer-links" aria-label="Link legali">
     <a href="privacy">Privacy &amp; Cookie</a>
+    <button type="button" class="social-revoke" hidden>Disattiva contenuti social</button>
   </nav>
-  <a href="https://www.instagram.com/nuovacopertura/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram di Nuova Copertura">
-    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-  </a>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/nuovacopertura/" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram di Nuova Copertura">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=61575051581275" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook di Nuova Copertura">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+    </a>
+  </div>
 </footer>
 
 <script src="script.js" defer></script>

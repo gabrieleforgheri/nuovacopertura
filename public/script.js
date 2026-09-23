@@ -255,6 +255,48 @@
     reveals.forEach((el) => revealObserver.observe(el));
   }
 
+  // ── social embeds ───────────────────────────────────────────────────────────
+  // Instagram/Facebook iframes let Meta set profiling cookies, so nothing is
+  // requested from Meta until the visitor clicks. The choice is remembered and
+  // can be withdrawn from the footer.
+  const SOCIAL_KEY = 'social-consent';
+  const revokeButtons = $$('.social-revoke');
+
+  const loadEmbeds = () => {
+    $$('.social-embed').forEach((box) => {
+      const frame = document.createElement('iframe');
+      // The Facebook plugin renders at a fixed pixel width (180–500).
+      const width = Math.min(500, Math.max(180, Math.floor(box.clientWidth)));
+      frame.src = box.dataset.src.replace('{w}', width);
+      frame.title = box.dataset.title;
+      frame.loading = 'lazy';
+      box.replaceChildren(frame);
+    });
+    revokeButtons.forEach((btn) => { btn.hidden = false; });
+  };
+
+  try {
+    if (localStorage.getItem(SOCIAL_KEY) === '1') loadEmbeds();
+  } catch { /* storage blocked: ask again on every visit */ }
+
+  $$('.social-consent').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      try {
+        localStorage.setItem(SOCIAL_KEY, '1');
+      } catch { /* private mode: consent lasts this page view only */ }
+      loadEmbeds();
+    })
+  );
+
+  revokeButtons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      try {
+        localStorage.removeItem(SOCIAL_KEY);
+      } catch { /* nothing stored */ }
+      location.reload();
+    })
+  );
+
   // ── count-up numbers ────────────────────────────────────────────────────────
   const formatNum = (n) => Math.floor(n).toLocaleString('it-IT');
 

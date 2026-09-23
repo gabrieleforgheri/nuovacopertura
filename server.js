@@ -86,6 +86,8 @@ const CSP_DIRECTIVES = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
+  // Social embeds, loaded only after consent (public/script.js).
+  'frame-src https://www.instagram.com https://www.facebook.com',
   "connect-src 'self'"
 ];
 

@@ -610,43 +610,16 @@
   .about-point-text span { font-size: 13px; color: var(--gray); }
 
   /* ── INSTAGRAM ── */
-  .instagram-wrap {
+  .social-grid {
     display: grid;
-    grid-template-columns: 0.95fr 1.05fr;
-    gap: 48px;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
     align-items: start;
+    margin-top: 40px;
   }
   .instagram-copy,
   .instagram-panel { min-width: 0; }
   .instagram-copy .section-sub { margin-bottom: 28px; max-width: 560px; }
-  .instagram-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 24px; }
-  .instagram-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 28px;
-  }
-  .instagram-stat {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 20px;
-    border-radius: 2px;
-  }
-  .instagram-stat strong {
-    display: block;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 34px;
-    letter-spacing: 1px;
-    color: var(--white);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .instagram-stat span {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.55);
-  }
   .instagram-panel {
     background: linear-gradient(180deg, rgba(0,146,70,0.08), rgba(255,255,255,0.02));
     border: 1px solid rgba(255,255,255,0.08);
@@ -810,12 +783,8 @@
   :root[data-theme='light'] .about-point-text span {
     color: #334155;
   }
-  :root[data-theme='light'] .instagram-profile small,
-  :root[data-theme='light'] .instagram-stat span {
+  :root[data-theme='light'] .instagram-profile small {
     color: #475569;
-  }
-  :root[data-theme='light'] .instagram-stat {
-    background: rgba(255,255,255,0.4);
   }
 
   /* ── ANIMATIONS ── */
@@ -865,12 +834,11 @@
     #chi-siamo { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
     .about-badge { bottom: -16px; right: 0; width: 110px; height: 110px; }
     .about-badge strong { font-size: 36px; }
-    .instagram-wrap { grid-template-columns: 1fr; gap: 32px; }
     .instagram-panel { padding: 16px; }
     .instagram-embed-head { align-items: flex-start; }
     .instagram-embed-head > div:last-child { width: 100%; justify-content: flex-start; }
     .instagram-embed-head > div:last-child .btn-ghost { width: 100%; text-align: center; }
-    .instagram-stats { grid-template-columns: 1fr; }
+    .social-grid { grid-template-columns: 1fr; }
     #contatti { grid-template-columns: 1fr; gap: 48px; padding: 70px 24px; }
     .form-row { grid-template-columns: 1fr; }
     footer { padding: 24px; flex-direction: column; text-align: center; }
@@ -1080,7 +1048,20 @@ body.is-locked {
   color: var(--white);
 }
 .ig-placeholder-text { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
-.instagram-profile > span { display: block; }
+.instagram-profile > span:not(.instagram-avatar) { display: block; }
+.instagram-avatar--fb { background: #1877f2; font-size: 30px; }
+.social-embed { container-type: inline-size; }
+/* Instagram profile embed: ~150px of header plus two rows of three square posts. */
+.social-embed iframe {
+  display: block;
+  width: 100%;
+  height: calc(150px + 66.7cqi);
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+}
+.ig-placeholder-text a { color: var(--orange); }
+.footer-social { display: flex; gap: 10px; }
 
 /* ── CONTATTI: ogni riga è cliccabile ── */
 a.contact-detail {
@@ -1145,14 +1126,17 @@ a.contact-detail:hover .contact-icon { background: rgba(0,146,70,0.28); }
   flex-wrap: wrap;
   justify-content: center;
 }
-.footer-links a {
+.footer-links a,
+.footer-links button {
   font-size: 12px;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--text-muted);
   text-decoration: none;
 }
-.footer-links a:hover { color: var(--orange); }
+.footer-links a:hover,
+.footer-links button:hover { color: var(--orange); }
+.footer-links button { background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; }
 
 /* ── PRIVACY PAGE ── */
 .legal-page {

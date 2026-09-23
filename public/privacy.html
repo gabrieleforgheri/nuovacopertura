@@ -47,7 +47,7 @@
 
 <main id="main" class="legal-page">
   <h1>Privacy e Cookie Policy</h1>
-  <p class="legal-updated">Ultimo aggiornamento: 20 agosto 2026</p>
+  <p class="legal-updated">Ultimo aggiornamento: 23 settembre 2026</p>
 
   <p>
     La presente informativa descrive come Nuova Copertura Srl tratta i dati personali degli utenti
@@ -86,7 +86,10 @@
       dati che ci fornisci in quella comunicazione.
     </li>
   </ul>
-  <p>Il sito non utilizza cookie di profilazione né strumenti di analytics o di advertising.</p>
+  <p>
+    Il sito non utilizza strumenti di analytics o di advertising. Cookie di profilazione di terze
+    parti possono essere installati solo se scegli di visualizzare i contenuti social (vedi punto 6).
+  </p>
 
   <h2>3. Finalità e base giuridica</h2>
   <table>
@@ -131,14 +134,14 @@
     <li>consulenti fiscali, legali e assicurativi, quando necessario.</li>
   </ul>
   <p>
-    I dati non sono diffusi né ceduti a terzi per finalità di marketing. Non è previsto alcun
-    trasferimento di dati verso Paesi extra-UE.
+    I dati non sono diffusi né ceduti a terzi per finalità di marketing. I dati del modulo non sono
+    trasferiti verso Paesi extra-UE; per i contenuti social vedi il punto 6.
   </p>
 
-  <h2>6. Cookie e tecnologie simili</h2>
+  <h2 id="cookie">6. Cookie e tecnologie simili</h2>
   <p>
-    Questo sito non installa cookie di profilazione. Utilizza esclusivamente lo spazio di
-    archiviazione locale del browser (<em>localStorage</em>) per ricordare una preferenza tecnica:
+    Questo sito non installa direttamente cookie. Utilizza lo spazio di archiviazione locale del
+    browser (<em>localStorage</em>) per ricordare due preferenze:
   </p>
   <table>
     <thead>
@@ -151,6 +154,12 @@
         <td>Ricorda la scelta tra tema chiaro e scuro</td>
         <td>Permanente fino a cancellazione</td>
       </tr>
+      <tr>
+        <td><code>social-consent</code></td>
+        <td>Tecnico — necessario</td>
+        <td>Ricorda che hai scelto di visualizzare i contenuti social</td>
+        <td>Fino a revoca o cancellazione</td>
+      </tr>
     </tbody>
   </table>
   <p>
@@ -158,9 +167,17 @@
     del Garante dell’11 luglio 2021).
   </p>
   <p>
-    <strong>Contenuti di terze parti.</strong> Il sito non incorpora contenuti di terze parti: la
-    sezione “Social” contiene solo un collegamento al nostro profilo Instagram, che apre il sito di
-    Meta in una nuova scheda. Finché non lo apri, nessun dato viene trasmesso a Meta.
+    <strong>Contenuti di terze parti (Instagram).</strong> La sezione “Social” può mostrare il nostro
+    profilo Instagram, fornito da Meta Platforms Ireland Ltd. Questi contenuti <strong>vengono caricati solo dopo che hai cliccato “Mostra i contenuti
+    social”</strong>: prima di quel momento il sito non contatta i server di Meta. Una volta
+    caricati, Meta può raccogliere il tuo indirizzo IP e dati di navigazione e installare cookie,
+    anche di profilazione, in qualità di titolare autonomo del trattamento, con possibile
+    trasferimento verso gli Stati Uniti sulla base del EU-U.S. Data Privacy Framework. Base
+    giuridica: il tuo consenso (art. 6.1.a GDPR). Puoi revocarlo in qualsiasi momento con il
+    pulsante “Disattiva contenuti social” in fondo alla pagina; i cookie già installati da Meta si
+    cancellano dalle impostazioni del browser. Dettagli:
+    <a href="https://www.facebook.com/privacy/policy/" target="_blank" rel="noopener noreferrer">informativa privacy di Meta</a>
+    e <a href="https://www.facebook.com/privacy/policies/cookies/" target="_blank" rel="noopener noreferrer">cookie policy di Meta</a>.
   </p>
   <p>
     I caratteri tipografici e le immagini del sito sono ospitati sui nostri server: la loro
@@ -218,6 +235,7 @@
   </p>
   <nav class="footer-links" aria-label="Link legali">
     <a href="privacy">Privacy &amp; Cookie</a>
+    <button type="button" class="social-revoke" hidden>Disattiva contenuti social</button>
   </nav>
 </footer>
 

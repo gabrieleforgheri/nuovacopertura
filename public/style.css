@@ -311,7 +311,6 @@
   .hero-photos {
     position: absolute; top: 0; right: 0; bottom: 0;
     width: 64%;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 40%);
     mask-image: linear-gradient(to right, transparent, #000 40%);
   }
   .hero-photo {
@@ -1084,16 +1083,13 @@ body.is-locked {
   font-size: 13px;
   color: var(--text-muted);
 }
-.cookie-banner[hidden] { display: none; }
 .cookie-banner strong { display: block; margin-bottom: 6px; color: var(--white); font-size: 15px; }
 .cookie-banner a { color: var(--orange); }
 .cookie-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
 .cookie-reject {
   margin-right: auto;
-  background: none; border: 0; padding: 0;
-  font: inherit; font-size: 12px;
+  font-size: 12px;
   color: var(--text-muted);
-  cursor: pointer;
 }
 /* Facebook Page plugin: fixed height, matches height=600 in its URL. */
 .social-embed iframe[src*="facebook.com"] { height: 600px; }
@@ -1173,6 +1169,7 @@ a.contact-detail:hover .contact-icon { background: rgba(0,146,70,0.28); }
 }
 .footer-links a:hover,
 .footer-links button:hover { color: var(--orange); }
+.cookie-reject,
 .footer-links button { background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; }
 
 /* ── PRIVACY PAGE ── */
@@ -1269,7 +1266,6 @@ a.contact-detail:hover .contact-icon { background: rgba(0,146,70,0.28); }
   /* No room beside the text on phones: full-bleed photo, the text panel keeps it legible. */
   .hero-photos {
     width: 100%;
-    -webkit-mask-image: none;
     mask-image: none;
   }
   .hero-photo { background-image: var(--photo, url('img/hero-1200.webp')); }

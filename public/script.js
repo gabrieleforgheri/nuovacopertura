@@ -48,6 +48,12 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
+  // localStorage can throw (private mode, blocked site data): fall back to "nothing stored".
+  const store = {
+    get: (key) => { try { return localStorage.getItem(key); } catch { return null; } },
+    set: (key, value) => { try { localStorage.setItem(key, value); } catch { /* not persisted */ } }
+  };
+
   // ── theme ───────────────────────────────────────────────────────────────────
   // The initial theme is applied by the inline script in <head> (no FOUC).
   const themeButtons = [$('#themeToggle'), $('#themeToggleMobile')].filter(Boolean);
@@ -67,31 +73,18 @@
     });
   };
 
-  const storedTheme = (() => {
-    try {
-      return localStorage.getItem(THEME_KEY);
-    } catch {
-      return null;
-    }
-  })();
-  applyTheme(storedTheme || (darkQuery.matches ? 'dark' : 'light'));
+  applyTheme(store.get(THEME_KEY) || (darkQuery.matches ? 'dark' : 'light'));
 
   themeButtons.forEach((btn) =>
     btn.addEventListener('click', () => {
       const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      try {
-        localStorage.setItem(THEME_KEY, next);
-      } catch { /* private mode: theme just won't persist */ }
+      store.set(THEME_KEY, next);
       applyTheme(next);
     })
   );
 
   darkQuery.addEventListener('change', (e) => {
-    let saved = null;
-    try {
-      saved = localStorage.getItem(THEME_KEY);
-    } catch { /* ignore */ }
-    if (!saved) applyTheme(e.matches ? 'dark' : 'light');
+    if (!store.get(THEME_KEY)) applyTheme(e.matches ? 'dark' : 'light');
   });
 
   // ── service modal ───────────────────────────────────────────────────────────
@@ -202,7 +195,6 @@
     };
     // New layer on top fades/zooms in over the old one, which is removed afterwards.
     const showPhoto = (item) => {
-      if (!heroBg) return;
       const old = $$('.hero-photo', heroBg);
       const layer = document.createElement('div');
       layer.className = 'hero-photo';
@@ -309,21 +301,13 @@
   document.body.append(banner);
 
   const setConsent = (value) => {
-    try {
-      localStorage.setItem(SOCIAL_KEY, value);
-    } catch { /* private mode: the choice lasts this page view only */ }
+    store.set(SOCIAL_KEY, value);
     banner.hidden = true;
     if (value === '1') loadEmbeds();
     else if (embedsLoaded) location.reload(); // drop the Meta iframes already running
   };
 
-  const storedConsent = (() => {
-    try {
-      return localStorage.getItem(SOCIAL_KEY);
-    } catch {
-      return null;
-    }
-  })();
+  const storedConsent = store.get(SOCIAL_KEY);
   if (storedConsent === '1') loadEmbeds();
   else if (storedConsent === null) banner.hidden = false;
 
@@ -331,12 +315,10 @@
     btn.addEventListener('click', () => setConsent(btn.dataset.consent))
   );
   $$('.social-consent').forEach((btn) => btn.addEventListener('click', () => setConsent('1')));
-  $$('.cookie-prefs').forEach((btn) =>
-    btn.addEventListener('click', () => {
-      banner.hidden = false;
-      $('[data-consent="1"]', banner).focus();
-    })
-  );
+  $('.cookie-prefs')?.addEventListener('click', () => {
+    banner.hidden = false;
+    $('[data-consent="1"]', banner).focus();
+  });
 
   // ── count-up numbers ────────────────────────────────────────────────────────
   const formatNum = (n) => Math.floor(n).toLocaleString('it-IT');
@@ -382,8 +364,6 @@
     const successEl = $('#formSuccess');
     const originalBtnText = btn ? btn.textContent : 'Invia Richiesta →';
 
-    const unavailable =
-      'Servizio email non disponibile al momento. Chiamaci al 388 784 1511 o scrivi a info@nuovacopertura.it.';
     const messages = {
       missing_fields: 'Compila tutti i campi obbligatori.',
       invalid_email: 'L’indirizzo email non sembra valido.',
@@ -392,9 +372,8 @@
       privacy_required: 'Per inviare la richiesta devi accettare l’informativa privacy.',
       rate_limited: 'Troppe richieste in poco tempo. Attendi un minuto e riprova.',
       forbidden_origin: 'Richiesta non autorizzata. Ricarica la pagina e riprova.',
-      smtp_not_configured: unavailable,
-      contact_not_configured: unavailable,
-      sender_not_configured: unavailable,
+      service_unavailable:
+        'Servizio email non disponibile al momento. Chiamaci al 388 784 1511 o scrivi a info@nuovacopertura.it.',
       delivery_failed: 'Invio non riuscito. Riprova tra poco oppure chiamaci al 388 784 1511.',
       network: 'Connessione non riuscita. Controlla la rete e riprova.'
     };

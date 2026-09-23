@@ -357,19 +357,19 @@ app.post('/api/contact', originGuard, rateLimit, async (req, res) => {
   const to = env('CONTACT_TO');
   if (!to) {
     console.error('[contact] CONTACT_TO not set');
-    return res.status(503).json({ ok: false, error: 'contact_not_configured' });
+    return res.status(503).json({ ok: false, error: 'service_unavailable' });
   }
 
   const transporter = getTransporter();
   if (!transporter) {
     console.error('[contact] SMTP missing:', smtpConfigSummary());
-    return res.status(503).json({ ok: false, error: 'smtp_not_configured' });
+    return res.status(503).json({ ok: false, error: 'service_unavailable' });
   }
 
   const from = buildMailFrom();
   if (!from) {
     console.error('[contact] SMTP_FROM / SMTP_USER not set');
-    return res.status(503).json({ ok: false, error: 'sender_not_configured' });
+    return res.status(503).json({ ok: false, error: 'service_unavailable' });
   }
 
   const text = [

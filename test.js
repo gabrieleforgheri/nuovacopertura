@@ -4,8 +4,15 @@
  */
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import net from 'node:net';
 
-const PORT = 3999;
+// Ask the OS for a free port: a fixed one collides with whatever else runs locally.
+const PORT = await new Promise((resolve) => {
+  const probe = net.createServer().listen(0, '127.0.0.1', () => {
+    const { port } = probe.address();
+    probe.close(() => resolve(port));
+  });
+});
 const BASE = `http://127.0.0.1:${PORT}`;
 
 const server = spawn(process.execPath, ['server.js'], {

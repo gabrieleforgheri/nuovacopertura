@@ -167,20 +167,19 @@
 
   // ── hero rotating headline ──────────────────────────────────────────────────
   const heroSlot = $('#heroSlot');
-  const heroPrep = $('#heroPrep');
   if (heroSlot && !prefersReducedMotion.matches) {
     const currentEl = $('.slot-current', heroSlot);
     const nextEl = $('.slot-next', heroSlot);
     const items = [
       // img: service photo (null = default hero photo from the CSS).
       // pos/flip: framing that keeps the subject on the right, away from the text.
-      { prep: 'NELLE', text: 'COPERTURE', img: null, flip: true },
-      { prep: 'NELLE', text: 'LINEE VITA', img: 'linea-vita' },
-      { prep: 'NEI', text: 'PARAPETTI', img: 'parapetti', pos: 'right' },
-      { prep: 'NELLE', text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', flip: true },
-      { prep: 'NEL', text: 'FOTOVOLTAICO', img: 'fotovoltaico' },
-      { prep: 'NELLE', text: 'MANUTENZIONI', img: 'manutenzione' },
-      { prep: 'NELLO', text: 'SMALTIMENTO AMIANTO', short: 'SMALTIMENTO', img: 'amianto', pos: 'left', flip: true }
+      { text: 'COPERTURE', img: null, flip: true },
+      { text: 'LINEE VITA', img: 'linea-vita' },
+      { text: 'PARAPETTI', img: 'parapetti', pos: 'right' },
+      { text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', flip: true },
+      { text: 'FOTOVOLTAICO', img: 'fotovoltaico' },
+      { text: 'MANUTENZIONI', img: 'manutenzione' },
+      { text: 'SMALTIMENTO AMIANTO', short: 'SMALTIMENTO', img: 'amianto', pos: 'left', flip: true }
     ];
     // Phones get the short form so the green line keeps the headline's size (see .hero-title).
     const label = (item) => (window.innerWidth <= 900 && item.short) || item.text;
@@ -214,7 +213,6 @@
       if (!currentEl || !nextEl || heroSlot.classList.contains('is-spinning')) return;
       idx = (idx + 1) % items.length;
       nextEl.textContent = label(items[idx]);
-      if (heroPrep) heroPrep.textContent = items[idx].prep;
       showPhoto(items[idx]);
       preload(items[(idx + 1) % items.length]);
       heroSlot.classList.add('is-spinning');
@@ -236,7 +234,6 @@
     };
 
     if (currentEl) currentEl.textContent = label(items[0]);
-    if (heroPrep) heroPrep.textContent = items[0].prep;
     preload(items[1]);
     start();
 
@@ -358,7 +355,7 @@
       invalid_email: 'L’indirizzo email non sembra valido.',
       invalid_phone: 'Il numero di telefono non sembra valido.',
       invalid_service: 'Seleziona un servizio dall’elenco.',
-      privacy_required: 'Per inviare la richiesta devi accettare l’informativa privacy.',
+      privacy_required: 'Per inviare la richiesta devi confermare di aver letto l’informativa privacy.',
       rate_limited: 'Troppe richieste in poco tempo. Attendi un minuto e riprova.',
       forbidden_origin: 'Richiesta non autorizzata. Ricarica la pagina e riprova.',
       service_unavailable:

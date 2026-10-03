@@ -111,7 +111,10 @@ app.use(
     extensions: ['html'],
     dotfiles: 'ignore',
     setHeaders(res, filePath) {
-      if (/[\\/](fonts|img)[\\/]/.test(filePath) || /\.(woff2|webp|png|jpe?g|ico|svg)$/i.test(filePath)) {
+      // npm run dev: always serve the latest CSS/JS/images.
+      if (process.env.NODE_ENV === 'development') {
+        res.setHeader('Cache-Control', 'no-store');
+      } else if (/[\\/](fonts|img)[\\/]/.test(filePath) || /\.(woff2|webp|png|jpe?g|ico|svg)$/i.test(filePath)) {
         res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
       } else if (/\.(css|js)$/i.test(filePath)) {
         res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');

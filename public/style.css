@@ -1236,5 +1236,5 @@ a.contact-detail:hover .contact-icon { background: color-mix(in srgb, var(--bran
     mask-image: none;
   }
   .hero-photo { background-image: var(--photo, url('img/hero-1200.webp')); }
-  .hero-photo--default { --pos: 72% center; } /* keep the roofer in frame on a portrait crop */
+  .hero-photo--default { --pos: 66%; } /* centres the roofer in the portrait crop */
 }

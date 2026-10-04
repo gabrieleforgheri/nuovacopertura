@@ -173,13 +173,14 @@
     const items = [
       // img: service photo (null = default hero photo from the CSS).
       // pos/flip: framing that keeps the subject on the right, away from the text.
-      { text: 'COPERTURE', img: null, pos: window.innerWidth <= 900 ? '72% center' : 'center' }, // never flip: the hoodie lettering
-      { text: 'LINEE VITA', img: 'linea-vita' },
-      { text: 'PARAPETTI', img: 'parapetti', pos: 'right' },
-      { text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', flip: true },
+      // mpos: x position that centres the subject in the narrow phone crop (<= 900px).
+      { text: 'COPERTURE', img: null, mpos: '66%' }, // never flip: the hoodie lettering
+      { text: 'LINEE VITA', img: 'linea-vita', mpos: '53%' },
+      { text: 'PARAPETTI', img: 'parapetti', pos: 'right', mpos: '59%' },
+      { text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', mpos: '9%', flip: true },
       { text: 'FOTOVOLTAICO', img: 'fotovoltaico' },
-      { text: 'MANUTENZIONI', img: 'manutenzione' },
-      { text: 'SMALTIMENTO AMIANTO', short: 'SMALTIMENTO', img: 'amianto', pos: 'left', flip: true }
+      { text: 'MANUTENZIONI', img: 'manutenzione', mpos: '48%' },
+      { text: 'SMALTIMENTO AMIANTO', short: 'SMALTIMENTO', img: 'amianto', pos: 'left', mpos: '50%', flip: true }
     ];
     // Phones get the short form so the green line keeps the headline's size (see .hero-title).
     const label = (item) => (window.innerWidth <= 900 && item.short) || item.text;
@@ -198,7 +199,7 @@
       const layer = document.createElement('div');
       layer.className = 'hero-photo';
       if (item.img) layer.style.setProperty('--photo', `url('${photo(item.img)}')`);
-      layer.style.setProperty('--pos', item.pos || 'center');
+      layer.style.setProperty('--pos', (window.innerWidth <= 900 && item.mpos) || item.pos || 'center');
       layer.style.setProperty('--flip', item.flip ? '-1' : '1');
       heroBg.append(layer);
       layer.getBoundingClientRect(); // commit the start state so the transition runs

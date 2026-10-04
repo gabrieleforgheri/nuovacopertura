@@ -173,7 +173,7 @@
     const items = [
       // img: service photo (null = default hero photo from the CSS).
       // pos/flip: framing that keeps the subject on the right, away from the text.
-      { text: 'COPERTURE', img: null, flip: true },
+      { text: 'COPERTURE', img: null, pos: window.innerWidth <= 900 ? '72% center' : 'center' }, // never flip: the hoodie lettering
       { text: 'LINEE VITA', img: 'linea-vita' },
       { text: 'PARAPETTI', img: 'parapetti', pos: 'right' },
       { text: 'SCALE MARINARE', img: 'scale-marinare', pos: 'left', flip: true },
